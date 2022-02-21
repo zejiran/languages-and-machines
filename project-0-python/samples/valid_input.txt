@@ -1,0 +1,25 @@
+(defvar rotate 3)
+
+(defun blocked-p ()
+	(not (can-move-p :north )))
+(if (blocked-p) (move 1) (skip))
+
+(
+(if (blocked-p) (move 1) (skip))
+(turn :left)
+)
+(defvar one 1)
+
+(defun foo (c p)
+	(put Balloons c)
+	(pick Chips p)
+	(move rotate))
+(foo 1 3)
+
+(defun goend ()
+	(if (not blocked-p)
+	((move one)
+	 (goend))
+	(skip)))
+
+(run-dirs (:left :front :left :back :right))

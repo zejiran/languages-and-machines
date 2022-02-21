@@ -1,7 +1,0 @@
-TO goend
-output IF ! BLOCKEDP [
-( BLOCK MOVE 1
-goEnd )
-NOP
-]
-END

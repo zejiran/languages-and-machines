@@ -1,2 +1,0 @@
-IF BLOCKEDP [ MOVE 1
-NOP]

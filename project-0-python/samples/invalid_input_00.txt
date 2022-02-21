@@ -1,0 +1,24 @@
+(defvar rotate 3)
+
+(if (blocked-p) (move 1)
+	(skip))
+
+
+(if (blocked-p) (move 1) (skip))
+
+(left 90)
+
+(defvar one 1)
+
+(defun foo (c p)
+	(drop c)
+	(free p)
+	(move n))
+
+(foo 1 3)
+
+(defun goend ()
+	(if (not blocked-p)
+	((move 1)
+	 (goend))
+	(skip)))

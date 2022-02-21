@@ -1,5 +1,0 @@
-( BLOCK
-IF BLOCKEDP [ MOVE 1
-                        NOP]
-LEFT 90
-)
