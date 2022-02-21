@@ -6,5 +6,5 @@ Collection of projects made on a language and computation theory course at Unive
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](LICENSE)**
-- Copyright 2021 © Juan Alegría
+- Copyright 2022 © Juan Alegría
 
