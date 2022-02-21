@@ -1,33 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Simple robot language parser
+Parser module
 
 @author: zejiran
 """
 
-import os
-
-
-def read_samples() -> list[str]:
-    """
-    Reads all the data of each file placed on the sample folder.
-    """
-    root: str = './samples'
-    files_data: list[str] = []
-
-    # Get data from each sample
-    for path in os.listdir(root):
-        print(f'Reading {path} commands')
-        with open(os.path.join(root, path), 'r') as f:
-            files_data.append(f.read())
-
-    return files_data
-
-
-robot_commands: list[str] = ['MOVE', 'RIGHT', 'LEFT', 'ROTATE',
-                             'LOOK', 'DROP', 'FREE', 'PICK', 'POP', 'CHECK', 'BLOCKEDP']
-flow_commands: list[str] = ['BLOCK', 'REPEAT',
-                            'IF', 'DEFINE', 'TO', 'OUTPUT', 'END']
+robot_commands: list = ['move', 'turn', 'face', 'put',
+                        'pick', 'move-dir', 'run-dirs', 'move-face']
+flow_commands: list = ['defvar', '=', 'skip',
+                       'if', 'loop', 'repeat', 'defun', '']
 
 
 class Variable:
@@ -50,7 +31,7 @@ def is_int(s: str) -> bool:
         return False
 
 
-def is_variable(value: str, program_variables: list[Variable]) -> bool:
+def is_variable(value: str, program_variables: list) -> bool:
     for v in program_variables:
         if v.name == value:
             return True
@@ -79,8 +60,8 @@ def parse(program: str) -> bool:
     is_robot_command = False
     is_block_or_iteration = False
     is_valid_command_param = False
-    is_checking = 0  # CHECK command has three phases 1 CHECK, 2 [C|B], 3 n.
-    is_looking = False
+    is_turning = False
+    is_facing = False
     is_iteration = False
     times_given = False
     iteration_started = False
@@ -91,9 +72,12 @@ def parse(program: str) -> bool:
     variable_named = False
     new_variable = Variable('', '')
 
-    is_defining_function = 0  # 0 TO, 1 name, 2 :, 3 param, 4 OUTPUT, 5 commands, 6 END
+    # 0 defun, 1 name, 2 `(`, 3 params, 4 `)`, 5 Block, 6 `)`
+    is_defining_function = 0
 
     for c in commands:
+        print(f'\nCommand: {c}')
+
         if is_defining_function == 1:
             is_defining_function = 2
             continue
@@ -151,7 +135,8 @@ def parse(program: str) -> bool:
 
         if is_conditional:
             is_conditional = False
-            if c == "BLOCKEDP":
+            if c == "facing-p" or c == "can-put-p" or c == "can-pick-p" or c == "can-move-p" or c == 'not':
+
                 bool_expression = True
                 continue
             else:
@@ -272,23 +257,3 @@ def parse(program: str) -> bool:
 
     # All commands satisfy the rules.
     return True
-
-
-def main():
-    files_data = read_samples()
-    for i, program in enumerate(files_data):
-        print('\n-------------------')
-        print(f'Input {i}')
-        print('--\n', program, '\n--')
-
-        validation = parse(program)
-
-        print(f'\nIs Input {i} using a correct syntax?')
-        if validation:
-            print(f"---> YES")
-        else:
-            print(f"---> NO")
-
-
-if __name__ == "__main__":
-    main()

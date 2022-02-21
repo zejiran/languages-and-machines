@@ -16,7 +16,7 @@ Example output: `Is Input N using a correct syntax? | YES`
 #### Execution
 
 1. Make sure that you have Python [installed](https://www.python.org/downloads/).
-2. Run `python parser.py` or `python3 parser.py` in a terminal according to your own configuration.
+2. Run `python main.py` or `python3 main.py` in a terminal according to your own configuration.
 
 ## License
 
