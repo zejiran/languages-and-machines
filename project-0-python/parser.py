@@ -5,6 +5,7 @@ Parser module
 @author: zejiran
 """
 
+
 robot_commands: list = ['move', 'turn', 'face', 'put',
                         'pick', 'move-dir', 'run-dirs', 'move-face']
 flow_commands: list = ['defvar', '=', 'skip',
@@ -38,9 +39,9 @@ def is_variable(value: str, program_variables: list) -> bool:
     return False
 
 
-def check_robot_command(value: str) -> bool:
+def is_robot_command(value: str) -> bool:
     """ 
-    Check if command is on group
+    Check if command is on robot commands group
     """
     for v in robot_commands:
         if v == value:
@@ -57,27 +58,45 @@ def parse(program: str) -> bool:
 
     # Temporal values for manage verification.
     program_variables: list[Variable] = []
-    is_robot_command = False
-    is_block_or_iteration = False
-    is_valid_command_param = False
+    robot_command_started = False
+    is_moving = False
     is_turning = False
     is_facing = False
-    is_iteration = False
+    # 0: not started, 1: picking or putting, 2: Ballons or Chips, 3: Number or Variable.
+    is_picking_or_putting = 0
+    # 0: not started, 1: move-dir, 2: Number or Variable, 3: Direction.
+    is_moving_dir = 0
+    is_running_dirs = False
+    # 0: not started, 1: move-face, 2: Number or Variable, 3: Orientation.
+    is_moving_face = 0
+    is_repeat_iteration = False
+    is_loop = False
     times_given = False
-    iteration_started = False
     is_conditional = False
-    bool_expression = False
     conditional_started = False
     is_defining = False
     variable_named = False
     new_variable = Variable('', '')
-
-    # 0 defun, 1 name, 2 `(`, 3 params, 4 `)`, 5 Block, 6 `)`
+    # 0: not started, 1: facing-p, 2: can-put-p, 3: can-pick-p, 4: can-move-p, not cond.
+    bool_expression_case = 0
+    # 0: defun, 1: name, 2: params, 3: Block.
     is_defining_function = 0
+    parenthesis_count = 0
 
     for c in commands:
-        print(f'\nCommand: {c}')
+        # Check if that parenthesis are balanced.
+        if (parenthesis_count < 0):
+            return False
 
+        while '(' in c:
+            parenthesis_count += 1
+            c = c.replace('(', '', 1)
+
+        while ')' in c:
+            parenthesis_count -= 1
+            c = c.replace(')', '', 1)
+
+        ##
         if is_defining_function == 1:
             is_defining_function = 2
             continue
@@ -128,7 +147,6 @@ def parse(program: str) -> bool:
         if bool_expression:
             if c == "[":
                 bool_expression = False
-                conditional_started = True
                 continue
             else:
                 return False
@@ -136,25 +154,7 @@ def parse(program: str) -> bool:
         if is_conditional:
             is_conditional = False
             if c == "facing-p" or c == "can-put-p" or c == "can-pick-p" or c == "can-move-p" or c == 'not':
-
-                bool_expression = True
-                continue
-            else:
-                return False
-
-        if c == "]":
-            if iteration_started or conditional_started:
-                # Reset variables.
-                iteration_started = False
-                conditional_started = False
-                continue
-            else:
-                return False
-
-        if times_given:
-            if c == "[":
-                times_given = False
-                iteration_started = True
+                bool_expression_case = True
                 continue
             else:
                 return False
@@ -167,89 +167,113 @@ def parse(program: str) -> bool:
             else:
                 return False
 
-        if is_looking:
-            is_looking = False
-            if c == "N" or c == "E" or c == "W" or c == "S":
-                continue
-            else:
-                return False
-
-        if is_checking == 1:
-            if c == "C" or c == "B":
-                is_checking = 2
-                continue
-            else:
-                return False
-
-        if is_checking == 2:
-            is_valid_command_param = is_int(
-                c) or is_variable(c, program_variables)
-            if is_valid_command_param:
-                is_valid_command_param = False
-                is_checking = 3
-                continue
-            else:
-                return False
-
-        if is_checking == 3:
-            is_checking = 0  # Reset check.
-            continue
-
-        if c == "NOP" or c == "BLOCKEDP":
-            continue
-
-        if is_robot_command:
-            is_valid_command_param = is_int(
-                c) or is_variable(c, program_variables)
-            if is_valid_command_param:
-                is_valid_command_param = False
-                continue
-
-            is_robot_command = False
-            continue
-
-        if c == "IF":
+        if c == "if":
             is_conditional = True
             continue
 
-        if c == "DEFINE":
+        if c == "defvar":
             is_defining = True
             continue
 
-        if c == "TO":
-            is_defining_function = 1
-            continue
-
-        is_robot_command = check_robot_command(c)
-        if is_robot_command:
-            if c == "CHECK":
-                is_checking = 1
-            if c == "LOOK":
-                is_looking = True
-            continue
-
-        if c == ")":
-            if is_block_or_iteration:
-                is_block_or_iteration = False  # Reset variable.
+        # Commands that can be executed on the robot.
+        if is_moving:
+            is_moving = False
+            if is_int(c) or is_variable(c, program_variables):
                 continue
             else:
                 return False
 
-        if is_block_or_iteration:
-            # BLOCK flow.
-            if c == flow_commands[0]:
+        if is_turning:
+            is_turning = False
+            if c == ":left" or c == ":right" or c == ":around":
                 continue
+            else:
+                return False
 
-            # REPEAT flow.
-            if c == flow_commands[1]:
-                is_iteration = True
+        if is_facing:
+            is_facing = False
+            if c == ":north" or c == ":south" or c == ":east" or c == ":west":
                 continue
+            else:
+                return False
 
+        if is_picking_or_putting == 1:
+            if c == "Balloons" or c == "Chips":
+                is_picking_or_putting = 2
+                continue
+            else:
+                return False
+        elif is_picking_or_putting == 2:
+            if is_int(c) or is_variable(c, program_variables):
+                is_picking_or_putting = 0
+                continue
+            else:
+                return False
+
+        if is_moving_dir == 1:
+            if is_int(c) or is_variable(c, program_variables):
+                is_moving_dir = 2
+                continue
+            else:
+                return False
+        elif is_moving_dir == 2:
+            if c == ":front" or c == ":back" or c == ":left" or c == ":right":
+                is_moving_dir = 0
+                continue
+            else:
+                return False
+
+        if is_running_dirs:
+            if c == ":front" or c == ":back" or c == ":left" or c == ":right":
+                is_running_dirs = False
+                continue
+            else:
+                return False
+
+        if is_moving_face == 1:
+            if is_int(c) or is_variable(c, program_variables):
+                is_moving_face = 2
+                continue
+            else:
+                return False
+        elif is_moving_face == 2:
+            if c == ":north" or c == ":south" or c == ":east" or c == ":west":
+                is_moving_face = 0
+                continue
+            else:
+                return False
+
+        # Verify if the command is a new robot command.
+        robot_command_started = is_robot_command(c)
+        if robot_command_started:
+            if c == robot_commands[0]:
+                is_moving = True
+            if c == robot_commands[1]:
+                is_turning = True
+            if c == robot_commands[2]:
+                is_facing = True
+            if c == robot_commands[3] or c == robot_commands[4]:
+                is_picking_or_putting = 1
+            if c == robot_commands[5]:
+                is_moving_dir = 1
+            if c == robot_commands[6]:
+                is_running_dirs = True
+            if c == robot_commands[7]:
+                is_moving_face = 1
             continue
 
-        # If starts with parenthesis that means it should follow a block or an iteration.
-        if c == "(":
-            is_block_or_iteration = True
+        # Start of loop command.
+        if c == flow_commands[5]:
+            is_loop = True
+            continue
+
+        # Start of repeat command.
+        if c == flow_commands[6]:
+            is_repeat_iteration = True
+            continue
+
+        # Skip command.
+        if c == flow_commands[2]:
             continue
 
         # A command doesn't satisfy the rules.
