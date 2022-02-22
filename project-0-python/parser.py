@@ -9,7 +9,7 @@ Parser module
 robot_commands: list = ['move', 'turn', 'face', 'put',
                         'pick', 'move-dir', 'run-dirs', 'move-face']
 flow_commands: list = ['defvar', '=', 'skip',
-                       'if', 'loop', 'repeat', 'defun', '']
+                       'if', 'loop', 'repeat', 'defun']
 
 
 class Variable:
@@ -57,7 +57,11 @@ def parse(program: str) -> bool:
     commands = program.split()
 
     # Temporal values for manage verification.
+    parenthesis_count = 0
     program_variables: list[Variable] = []
+    is_defining = False
+    variable_named = False
+    new_variable = Variable('', '')
     robot_command_started = False
     is_moving = False
     is_turning = False
@@ -69,19 +73,13 @@ def parse(program: str) -> bool:
     is_running_dirs = False
     # 0: not started, 1: move-face, 2: Number or Variable, 3: Orientation.
     is_moving_face = 0
-    is_repeat_iteration = False
-    is_loop = False
-    times_given = False
-    is_conditional = False
+    is_assigning = False
     conditional_started = False
-    is_defining = False
-    variable_named = False
-    new_variable = Variable('', '')
     # 0: not started, 1: facing-p, 2: can-put-p, 3: can-pick-p, 4: can-move-p, not cond.
     bool_expression_case = 0
+    is_repeat_iteration = False
     # 0: defun, 1: name, 2: params, 3: Block.
     is_defining_function = 0
-    parenthesis_count = 0
 
     for c in commands:
         # Check if that parenthesis are balanced.
@@ -95,41 +93,134 @@ def parse(program: str) -> bool:
         while ')' in c:
             parenthesis_count -= 1
             c = c.replace(')', '', 1)
+            if is_defining_function == 2:
+                is_defining_function = 3
+                continue
 
-        ##
+        # Validate function definition.
+        if c == flow_commands[6]:
+            is_defining_function = 1
+            continue
+
         if is_defining_function == 1:
             is_defining_function = 2
             continue
 
         if is_defining_function == 2:
-            if c == ":":
-                is_defining_function = 3
-                continue
-            else:
-                return False
-
-        if is_defining_function == 3:
-            is_defining_function = 4
             continue
 
-        if is_defining_function == 4:
-            if c == "OUTPUT":
-                is_defining_function = 5
-                continue
-            else:
-                return False
-
-        if is_defining_function == 5:
-            is_defining_function = 6
+        # RepeatTimes command.
+        if c == flow_commands[5]:
+            is_repeat_iteration = True
             continue
 
-        if is_defining_function == 6:
-            if c == "END":
-                is_defining_function = 0
+        if is_repeat_iteration:
+            if is_int(c) or is_variable(c, program_variables):
+                is_repeat_iteration = False
                 continue
             else:
                 return False
 
+        # Repeat command.
+        if c == flow_commands[4]:
+            conditional_started = True
+            continue
+
+        # Verify conditionals.
+        if bool_expression_case == 5:  # Recursive special case.
+            conditional_started = True
+
+        if conditional_started:
+            conditional_started = False
+            if c == "facing-p":
+                bool_expression_case = 1
+                continue
+            if c == "can-put-p":
+                bool_expression_case = 2
+                continue
+            if c == "can-pick-p":
+                bool_expression_case = 3
+                continue
+            if "can-move-p":
+                bool_expression_case = 4
+                continue
+            if c == 'not':
+                bool_expression_case = 5
+                continue
+            else:
+                return False
+
+        if bool_expression_case == 1:
+            if c == ":north" or c == ":south" or c == ":east" or c == ":west":
+                bool_expression_case = 0
+                continue
+            else:
+                return False
+
+        if bool_expression_case == 2:
+            if c == "balloons" or c == "chips":
+                bool_expression_case = 2.5  # Intermediary state.
+                continue
+            else:
+                return False
+        elif bool_expression_case == 2.5:
+            if is_int(c) or is_variable(c, program_variables):
+                bool_expression_case = 0
+                continue
+            else:
+                return False
+
+        if bool_expression_case == 3:
+            if c == "balloons" or c == "chips":
+                bool_expression_case = 3.5  # Intermediary state.
+                continue
+            else:
+                return False
+        elif bool_expression_case == 3.5:
+            if is_int(c) or is_variable(c, program_variables):
+                bool_expression_case = 0
+                continue
+            else:
+                return False
+
+        if bool_expression_case == 4:
+            if c == ":north" or c == ":south" or c == ":east" or c == ":west":
+                bool_expression_case = 0
+                continue
+            else:
+                return False
+
+        # Introduction of if statement.
+        if c == flow_commands[3]:
+            conditional_started = True
+            continue
+
+        # Assign a value to variable.
+        if is_assigning:
+            if variable_named:
+                if is_int(c):
+                    for x in program_variables:
+                        if x.name == new_variable.name:
+                            x.modify_value(c)
+                            variable_named = False
+                            is_assigning = False
+                            break
+                    continue
+                else:
+                    return False
+            for x in program_variables:
+                if x.name == c:
+                    new_variable.modify_name(c)
+                    x.modify_name(c)
+                    variable_named = True
+                    break
+            continue
+
+        if c == flow_commands[1]:
+            is_assigning = True
+            continue
+
+        # Definition of a variable.
         if is_defining:
             if variable_named:
                 if is_int(c):
@@ -138,40 +229,14 @@ def parse(program: str) -> bool:
                     variable_named = False
                     is_defining = False
                     continue
-
-            variable_name = c.lower()
+                else:
+                    return False
+            variable_name = c
             new_variable.modify_name(variable_name)
             variable_named = True
             continue
 
-        if bool_expression:
-            if c == "[":
-                bool_expression = False
-                continue
-            else:
-                return False
-
-        if is_conditional:
-            is_conditional = False
-            if c == "facing-p" or c == "can-put-p" or c == "can-pick-p" or c == "can-move-p" or c == 'not':
-                bool_expression_case = True
-                continue
-            else:
-                return False
-
-        if is_iteration:
-            if is_int(c):
-                times_given = True
-                is_iteration = False
-                continue
-            else:
-                return False
-
-        if c == "if":
-            is_conditional = True
-            continue
-
-        if c == "defvar":
+        if c == flow_commands[0]:
             is_defining = True
             continue
 
@@ -260,16 +325,6 @@ def parse(program: str) -> bool:
                 is_running_dirs = True
             if c == robot_commands[7]:
                 is_moving_face = 1
-            continue
-
-        # Start of loop command.
-        if c == flow_commands[5]:
-            is_loop = True
-            continue
-
-        # Start of repeat command.
-        if c == flow_commands[6]:
-            is_repeat_iteration = True
             continue
 
         # Skip command.
