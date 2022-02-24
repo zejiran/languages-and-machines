@@ -59,6 +59,9 @@ def parse(program: str) -> bool:
     # Temporal values for manage verification.
     parenthesis_count = 0
     program_variables: list[Variable] = []
+    program_functions: list[str] = {'': []}
+    new_function: str = ''
+    uncounted_params = 0
     is_defining = False
     variable_named = False
     new_variable = Variable('', '')
@@ -82,6 +85,7 @@ def parse(program: str) -> bool:
     is_defining_function = 0
 
     for c in commands:
+        stop_iteration = False
         # Check if that parenthesis are balanced.
         if (parenthesis_count < 0):
             return False
@@ -95,7 +99,13 @@ def parse(program: str) -> bool:
             c = c.replace(')', '', 1)
             if is_defining_function == 2:
                 is_defining_function = 3
-                continue
+                program_functions[new_function].append(c.replace(')', ''))
+                stop_iteration = True
+        if stop_iteration == True:
+            continue
+
+        if len(c) == 0:
+            continue
 
         # Validate function definition.
         if c == flow_commands[6]:
@@ -103,11 +113,34 @@ def parse(program: str) -> bool:
             continue
 
         if is_defining_function == 1:
+            new_function = c
+            program_functions[new_function] = []
             is_defining_function = 2
             continue
 
         if is_defining_function == 2:
+            program_functions[new_function].append(c)
             continue
+
+        if is_defining_function == 3:
+            is_defining_function = 0
+            if c == "facing-p":
+                bool_expression_case = 1
+                continue
+            if c == "can-put-p":
+                bool_expression_case = 2
+                continue
+            if c == "can-pick-p":
+                bool_expression_case = 3
+                continue
+            if c == "can-move-p":
+                bool_expression_case = 4
+                continue
+            if c == 'not':
+                bool_expression_case = 5
+                continue
+            if is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
+                continue
 
         # RepeatTimes command.
         if c == flow_commands[5]:
@@ -115,7 +148,7 @@ def parse(program: str) -> bool:
             continue
 
         if is_repeat_iteration:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 is_repeat_iteration = False
                 continue
             else:
@@ -141,11 +174,22 @@ def parse(program: str) -> bool:
             if c == "can-pick-p":
                 bool_expression_case = 3
                 continue
-            if "can-move-p":
+            if c == "can-move-p":
                 bool_expression_case = 4
                 continue
             if c == 'not':
                 bool_expression_case = 5
+                continue
+            if is_variable(c, program_variables) or c in program_functions[new_function]:
+                bool_expression_case = 0
+                continue
+            if c in program_functions:
+                bool_expression_case = 0
+                # Calling function {c}.
+                new_function = c
+                for param in program_functions[c]:
+                    if param:
+                        uncounted_params += 1
                 continue
             else:
                 return False
@@ -164,7 +208,7 @@ def parse(program: str) -> bool:
             else:
                 return False
         elif bool_expression_case == 2.5:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 bool_expression_case = 0
                 continue
             else:
@@ -177,7 +221,7 @@ def parse(program: str) -> bool:
             else:
                 return False
         elif bool_expression_case == 3.5:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 bool_expression_case = 0
                 continue
             else:
@@ -220,12 +264,26 @@ def parse(program: str) -> bool:
             is_assigning = True
             continue
 
+        # Usage of previous defined functions.
+        if c in program_functions:
+            # Calling function {c}.
+            new_function = c
+            for param in program_functions[c]:
+                if param:
+                    uncounted_params += 1
+            continue
+
+        if uncounted_params > 0:
+            uncounted_params -= 1
+            continue
+
         # Definition of a variable.
         if is_defining:
             if variable_named:
                 if is_int(c):
                     new_variable.modify_value(c)
-                    program_variables.append(new_variable)
+                    program_variables.append(
+                        Variable(new_variable.name, new_variable.value))
                     variable_named = False
                     is_defining = False
                     continue
@@ -243,7 +301,7 @@ def parse(program: str) -> bool:
         # Commands that can be executed on the robot.
         if is_moving:
             is_moving = False
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 continue
             else:
                 return False
@@ -269,14 +327,14 @@ def parse(program: str) -> bool:
             else:
                 return False
         elif is_picking_or_putting == 2:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 is_picking_or_putting = 0
                 continue
             else:
                 return False
 
         if is_moving_dir == 1:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 is_moving_dir = 2
                 continue
             else:
@@ -290,13 +348,15 @@ def parse(program: str) -> bool:
 
         if is_running_dirs:
             if c == ":front" or c == ":back" or c == ":left" or c == ":right":
-                is_running_dirs = False
+                running_was_direction = True
                 continue
+            elif running_was_direction:
+                is_running_dirs = False
             else:
                 return False
 
         if is_moving_face == 1:
-            if is_int(c) or is_variable(c, program_variables):
+            if is_int(c) or is_variable(c, program_variables) or c in program_functions or c in program_functions[new_function]:
                 is_moving_face = 2
                 continue
             else:
