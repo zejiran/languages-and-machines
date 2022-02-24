@@ -11,7 +11,8 @@ validates if the syntax is correct or not.
 
 Example output: `Is Input N using a correct syntax? | YES`
 
-![Example console output](https://i.ibb.co/ZMDs3Bq/2021-09-06-21-26.png)
+![Example console output](https://user-images.githubusercontent.com/30379522/155457470-497fd870-5eb4-471f-aecc-fec89d33eef0.png)
+
 
 #### Execution
 
