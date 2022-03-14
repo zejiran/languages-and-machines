@@ -6,7 +6,7 @@ Simple robot language parser
 """
 
 import os
-import parser
+import robot_parser
 
 
 def read_samples() -> list:
@@ -32,7 +32,7 @@ def main():
         print(f'Input {i + 1}')
         print('--\n', program, '\n--')
 
-        validation = parser.parse(program)
+        validation = robot_parser.parse(program)
 
         print(f'\nIs Input {i + 1} using a correct syntax?')
         if validation:

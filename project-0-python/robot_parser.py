@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Parser module
+Robot parser module
 
 @author: zejiran
 """
