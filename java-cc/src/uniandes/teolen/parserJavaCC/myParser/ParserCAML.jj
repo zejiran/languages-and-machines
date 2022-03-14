@@ -1,0 +1,90 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = true;
+  STATIC = false;
+}
+PARSER_BEGIN(ParserCAML)
+package uniandes.teolen.parserJavaCC.myParser;
+
+import java.util.*;
+ 
+public class ParserCAML {
+
+} 
+
+PARSER_END(ParserCAML)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERATORS */
+{
+    <PP: "::">
+}
+
+TOKEN :
+{
+    < INT: ( <DIGIT> )( <DIGIT> )* >
+|   < #DIGIT: "0" | "1" | "2"| "3" | "4" | "5" |  "6" | "7" | "8" |"9" >
+}
+
+
+ArrayList <Integer> camlList():
+{ArrayList resp, rest = new ArrayList <Integer>();}
+{
+	resp = listPrep() ("@" rest = listPrep() {resp.addAll(rest);})*
+    {return resp;}
+}
+
+ArrayList <Integer> listPrep():
+{ArrayList <Integer> resp = new ArrayList <Integer> (),  rest;
+ int n;}
+{
+(
+  	 n = num() <PP>   rest = listPrep() {resp.add(0,n);}
+|   rest = simpleList()
+)
+	{resp.addAll(rest);
+	 return resp;
+	}	 
+}
+
+ArrayList  <Integer> simpleList():
+{ArrayList  <Integer> resp;
+ int n;}
+{
+ ("[" {resp=new  ArrayList <Integer>();}(n = num() {resp.add(n);} ("," n=num() {resp.add(n);})*)? "]" 
+ | "(" resp = camlList() ")")
+ {return resp;}	
+}
+
+
+int num() throws Error:
+{	
+	int total=1;
+	Token token;
+}
+
+{
+	(token=<INT>)
+
+	{ 
+		try {
+			total = Integer.parseInt(token.image);
+		} 
+		catch (NumberFormatException ee) 
+		{
+			// Dada la forma de <ENTERO>, sabemos que solo puede tener d�gitos y signo
+			// Si cae ac� es por que el signo era +
+			throw new Error("Numero demasiado grande"+token.image);
+		}
+		return total;
+     }
+     
+     
+}

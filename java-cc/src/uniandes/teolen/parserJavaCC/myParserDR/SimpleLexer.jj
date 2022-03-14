@@ -1,0 +1,76 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = true;
+  STATIC = false;
+}
+PARSER_BEGIN(SimpleLexer)
+package uniandes.teolen.parserJavaCC.myParserDR;
+ 
+public class SimpleLexer {
+
+	public int sigToken() {
+	   return ((jj_ntk==-1)?jj_ntk():jj_ntk);
+     }
+     
+     public void aceptar(int kind) throws ParseException {
+     		jj_consume_token(kind);
+     }
+     
+     public void avanzar() throws ParseException {
+		jj_consume_token(getNextToken().kind);
+     }
+
+ 
+} 
+
+PARSER_END(SimpleLexer)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERATORS */
+{
+	< AT: "@" >
+|	< OR: "|" >
+|   < OP: "(">
+|   < CP: ")"> 
+|   < OB:  "[">
+|   < CB: "]">
+|    <COMMA: ",">
+|    <PP: "::">
+}
+
+TOKEN :
+{
+    < INT: ( <DIGIT> )( <DIGIT> )* >
+|   < #DIGIT: "0" | "1" | "2"| "3" | "4" | "5" |  "6" | "7" | "8" |"9" >
+}
+
+
+int num() throws Error:
+{	
+	int total=1;
+	Token token;
+}
+
+{
+	(token=<INT>)
+
+	{ 
+		try {
+			total = Integer.parseInt(token.image);
+		} 
+		catch (NumberFormatException ee) 
+		{
+			// Dada la forma de <ENTERO>, sabemos que solo puede tener d�gitos y signo
+			// Si cae ac� es por que el signo era +
+			throw new Error("Numero demasiado grande"+token.image);
+		}
+		return total;
+     }
+}

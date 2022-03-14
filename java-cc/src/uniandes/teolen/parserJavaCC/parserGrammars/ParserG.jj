@@ -1,0 +1,68 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = false;
+  STATIC = false;
+}
+PARSER_BEGIN(ParserG)
+package uniandes.teolen.parserJavaCC.parserGrammars;
+
+import java.util.*;
+ 
+public class ParserG {
+
+} 
+ 
+PARSER_END(ParserG)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERATORS */
+{
+    <ARROW: "::=">
+}
+
+TOKEN :
+{
+    < INT: ( <DIGIT> )( <DIGIT> )* >
+|   < #DIGIT: "0" | "1" | "2"| "3" | "4" | "5" |  "6" | "7" | "8" |"9" >
+|   < #MAY: ["A"-"Z"] >
+|   < #MIN: ["a"-"z"] >
+|   < NTerm: ( <MAY>  ( <MAY > | < MIN >)* )>
+|   < Term: ( <MIN>  ( <MAY > | < MIN >)* )>
+}
+
+
+
+
+void prod():
+{}
+{
+   p() (sim())* 
+}
+
+void p():
+{}
+{
+  (<Term> p() sim() |<NTerm> p1() sim()) 
+}
+void p1():
+{}
+{
+  ((<Term>| <NTerm>) p1() sim() | < ARROW >)  
+}
+
+
+void sim():
+{}
+{
+     <Term>| <NTerm>
+}
+
+
+  

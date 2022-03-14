@@ -1,0 +1,80 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = true;
+  STATIC = false;
+}
+PARSER_BEGIN(ParserCAMLco)
+package uniandes.teolen.parserJavaCC.parserCAML;
+
+
+ 
+public class ParserCAMLco {
+
+} 
+
+PARSER_END(ParserCAMLco)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERATORS */
+{
+    <PP: "::">
+}
+
+TOKEN :
+{
+    < INT: ( <DIGIT> )( <DIGIT> )* >
+|   < #DIGIT: "0" | "1" | "2"| "3" | "4" | "5" |  "6" | "7" | "8" |"9" >
+}
+
+void camlList():
+{}
+{
+	 listPrep() ("@" listPrep())*  
+}
+
+void listPrep():
+{}
+{
+  	 ( num() <PP> )*   simpleList()
+}
+
+void simpleList():
+{}
+{
+ "[" (num()  (","  num() )*)? "]" 
+ | "(" camlList() ")"
+    
+}
+
+ 
+int num() throws Error:
+{	
+	int total=1;
+	Token token;
+}
+
+{
+	(token=<INT>)
+
+	{ 
+		try {
+			total = Integer.parseInt(token.image);
+		} 
+		catch (NumberFormatException ee) 
+		{
+			// Dada la forma de <ENTERO>, sabemos que solo puede tener d�gitos y signo
+			// Si cae ac� es por que el signo era +
+			throw new Error("Numero demasiado grande"+token.image);
+		}
+		return total;
+     }
+     
+     
+}
