@@ -1,32 +1,19 @@
 /*
-Gramatica para el Robot:
-Autor: Alejandro Arango
-Modificado por: Silvia Takahashi
-Modificado por: Juan Pablo Morales.
-Agregadas producciones para manejar globos
-Modificado por Silvia Takahashi
-Eliminadas producciones para manejar globos
-Agregado el esqueleto para la traduccion
-Modificado por Silvia Takahashi 
-Re: Agregar Reglas para el manejo de globos
-Modificado por Saulo Daza y Sonia Vivas
-Modificado por Silvia Takahashi
-Eliminadas reglas de traducci�n DE  MARCROS
-Cambio del lenguaje de comandos
-Modificado por Silvia Takahashi: algunas Reglas para traduccion
-Modificado por Silvia Takahashi: Cambio en el lenguaje
-Abril: 2008 - Simplificado apra solo interpretaci�n
+Project 1.
+
+JavaCC Robot Language Interpreter.
+
+Author: Juan Alegría - 202011282
  **/
 
 options 
 {
-	LOOKAHEAD=1; 
-	IGNORE_CASE=true;
+	LOOKAHEAD = 1; 
+	IGNORE_CASE = true;
 	STATIC = false;
-	
 }
-   
 
+   
 PARSER_BEGIN(Robot)
 
 package uniandes.lym.robot.control;
@@ -38,136 +25,131 @@ import java.util.Vector;
 import java.util.LinkedList;
 
 @SuppressWarnings("serial")
-public class Robot 
-{
-
-
+public class Robot {
 	private RobotWorldDec world;
-	
 	
 	void setWorld(RobotWorld w) {
 		world = (RobotWorldDec) w;	
 	}
 
-	String salida=new String();
+	String output = new String();
 }
+
 PARSER_END(Robot)
 
-SKIP:
-{
+SKIP: {
 	" "
-	|	"\r"
-	|	"\t"
-//	| "\n"
+	| "\r"
+	| "\t"
+	| "\n"
 }
 
-TOKEN: /* Nombres de Comandos */
-{
-
-			<T_MOVER:  "Move">
-		| 	<T_TURNRIGHT: "TURNRIGHT">
-		| 	<T_PONER: "Put">
-		| 	<T_RECOGER: "Pick">
-		|  < T_POP: "Pop" >
-		
-
+TOKEN: { /* Command names */
+		<T_DEFVAR:  "defvar">
+		| <T_ASSIGN: "=">
+		| <T_MOVE:  "move">
+		| <T_TURN: "turn">
+		| <T_FACE: "face">
+		| <T_PUT: "put">
+		| <T_PICK: "pick">
+		| < T_MOVE_DIR: "move-dir" >
+		| < T_RUN_DIRS: "run-dirs" >
+		| < T_MOVE_FACE: "move-face" >
+		| < T_SKIP: "skip" >
 }
 
-TOKEN :
-{
-		<T_BALLOONS:  "BALLOONS" >
-		|	<T_CHIPS:     "CHIPS"  >	
-
+TOKEN: { /* Control structures */ 
+		<T_IF:  "if">
+		| <T_LOOP: "loop">
+		| <T_REPEAT: "repeat">
+		| <T_DEFUN: "defun">
 }
 
+TOKEN: { /* Conditions name*/ 
+	    < T_CONDITION: "facing-p" | "can-put-p" | "can-pick-p" | "can-move-p" | "not">
+}
 
-TOKEN :
-{
-		<NUMERO: (<DIGIT>)+ >
+TOKEN: { /* Objects */
+  		< T_OBJ: <T_BALLOONS> | <T_CHIPS> >
+		|  <T_BALLOONS:  "ballons" >
+		|	<T_CHIPS:     "chips" >	
+}
+
+TOKEN: { 
+  		< T_DIRECTION_SIMPLE: ":left" | ":right" | ":around" >
+        | < T_DIRECTION: ":front" | ":right" | ":left" | "back" >
+        | < T_ORIENTATION: ":north" | ":south" | ":east" | ":west" >
+        | <LST_DIRECTION: (<T_DIRECTION>)+ >
+}
+
+TOKEN: {
+        <NUMBER: (<DIGIT>)+ >
 		|  	<#DIGIT: ["0"-"9"] >
+		|  < VAR: (["a"-"z"] | ["A"-"Z"])+ (["0"-"9"])* (["a"-"z"])* (["A"-"Z"])* (".")* ("#")* ("@")* ("_")* ("$")*>
 }
 
-
-	boolean command(StringBuffer sistema) :
-	{	
-		
+boolean command(StringBuffer system_) : {	
 		int x;
-		salida=new String();
-		
+		output = new String();
+		String[] defined_names;
 	}
 	
 	{
-		(
-		   <T_TURNRIGHT> "(" ")" {world.turnRight();salida = "Command: Turnright";}
-		| 	<T_MOVER>  "(" x=numero() ")" {world.moveForward(x);salida = "Command: Moveforward ";}  
-		|  <T_PONER> "("  objetoPoner() ")"					  			
-		|  <T_RECOGER> "("  objetoRecoger()  ")"	
-	    |  < T_POP > "(" x=numero() ")" {world.popBalloons(x); salida = "Comando:  Pop";}
-		) "\n" 
+//		(
+//	    <T_TURNRIGHT> "(" ")" { world.turnRight(); salida = "Command: Turnright"; }
+//		| 	<T_MOVE>  "(" x=numero() ")" {world.moveForward(x);salida = "Command: Moveforward ";}  
+//		|  <T_PONER> "("  objetoPoner() ")"					  			
+//		|  <T_RECOGER> "("  objetoRecoger()  ")"	
+//	    |  < T_POP > "(" x=numero() ")" {world.popBalloons(x); output = "Comando:  Pop";}
+//		)
 
-		{
-		  //  try {
-	    	//		 Thread.sleep(1);
-	    	  //   } catch (InterruptedException e) {
-	    		//	        System.err.format("IOException: %s%n", e);
-	    		//	    }
-	    			 
-			sistema.append(salida);
-			return true;
-		}
+//		(defvar name n)
+//		(= name n)
+//		(move n)
+//		(turn D)
+//		(face O)
+//		(put X n)
+//		(pick X n)
+//		(move-dir n D)
+//		(run-dirsr Ds)
+//		(move-face n O)
+//		(skip)
+//		(funcname params)
 
-     |  "\n" { return true; }
-
-		| <EOF> {return false;} 
+	{
+		system_.append(output);
+		return true;
 	}
+}
 
-	void objetoPoner() :
+void putObj() :
 	{
 		int f=1;	
 	}
 	{
-		( <T_CHIPS>    "," f=numero() {world.putChips(f); salida = "Command:  Put Chips"; })
-		|  	  ( <T_BALLOONS>   "," f=numero() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
+		( <T_CHIPS>    "," f = number() {world.putChips(f); output = "Command:  Put Chips"; })
+		| ( <T_BALLOONS>   "," f=number() {world.putBalloons(f); output = "Command:  Put Balloons";})
+}
 
-	}
+void pickObj() : {
+  int f=1;	
+}
+{
+	( <T_CHIPS>   "," f=number() {world.pickChips(f); output = "Command:  Pick chips";})
+	| ( <T_BALLOONS>   "," f=number() {world.grabBalloons(f); output = "Command:  Pick balloons";})	 
+}
 
-	void objetoRecoger() :
-	{
-		int f=1;	
-	}
-	{
-		( <T_CHIPS>   "," f=numero() {world.pickChips(f);salida = "Command:  Pick chips";})
-		|  	  ( <T_BALLOONS>   "," f=numero() {world.grabBalloons(f);salida="Command:  Pick balloons";})	 
-
-	}
-
-	
-	
-
-	/**
-	 *  reconoce un numero entero sin signo
-	 * @return el valor entero correspondiente al valor reconocido
-	 */
-
-	int numero() throws Error:
-	{	
+int number() throws Error: {	
 		int total=1;
-	}
-	{
-		<NUMERO>
-		{
-			try 
-			{
-				total = Integer.parseInt(token.image);
-			} 
-			catch (NumberFormatException ee) 
-			{
-				// Dada la forma de NUMERO, sabemos que solo puede tener d�gitos
-				// Por lo tanto, lo unico que podria pasar es que el numero sea muy grande
-				throw new Error("Number out of bounds: "+token.image+"!!");
-			}
-			return total;
+}
+{
+	<NUMBER>
+    {
+		try {
+			total = Integer.parseInt(token.image);
+		} catch (NumberFormatException ee) {
+			throw new Error("Number out of bounds: " + token.image + "!");
 		}
+		return total;
 	}
-
-	
+}

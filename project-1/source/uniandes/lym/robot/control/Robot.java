@@ -9,152 +9,76 @@ import java.util.LinkedList;
 
 @SuppressWarnings("serial")
 public class Robot implements RobotConstants {
-
-
         private RobotWorldDec world;
-
 
         void setWorld(RobotWorld w) {
                 world = (RobotWorldDec) w;
         }
 
-        String salida=new String();
+        String output = new String();
 
-  final public boolean command(StringBuffer sistema) throws ParseException {
+  final public boolean command(StringBuffer system_) throws ParseException {
                 int x;
-                salida=new String();
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case T_MOVER:
-    case T_TURNRIGHT:
-    case T_PONER:
-    case T_RECOGER:
-    case T_POP:
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case T_TURNRIGHT:
-        jj_consume_token(T_TURNRIGHT);
-        jj_consume_token(13);
-        jj_consume_token(14);
-                                          world.turnRight();salida = "Command: Turnright";
-        break;
-      case T_MOVER:
-        jj_consume_token(T_MOVER);
-        jj_consume_token(13);
-        x = numero();
-        jj_consume_token(14);
-                                                       world.moveForward(x);salida = "Command: Moveforward ";
-        break;
-      case T_PONER:
-        jj_consume_token(T_PONER);
-        jj_consume_token(13);
-        objetoPoner();
-        jj_consume_token(14);
-        break;
-      case T_RECOGER:
-        jj_consume_token(T_RECOGER);
-        jj_consume_token(13);
-        objetoRecoger();
-        jj_consume_token(14);
-        break;
-      case T_POP:
-        jj_consume_token(T_POP);
-        jj_consume_token(13);
-        x = numero();
-        jj_consume_token(14);
-                                             world.popBalloons(x); salida = "Comando:  Pop";
-        break;
-      default:
-        jj_la1[0] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-      jj_consume_token(15);
-                  //  try {
-                //		 Thread.sleep(1);
-                  //   } catch (InterruptedException e) {
-                        //	        System.err.format("IOException: %s%n", e);
-                        //	    }
+                output = new String();
+                String[] defined_names;
+                system_.append(output);
+                {if (true) return true;}
+    throw new Error("Missing return statement in function");
+  }
 
-                        sistema.append(salida);
-                        {if (true) return true;}
+  final public void putObj() throws ParseException {
+                int f=1;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case T_CHIPS:
+      jj_consume_token(T_CHIPS);
+      jj_consume_token(31);
+      f = number();
+                                                 world.putChips(f); output = "Command:  Put Chips";
       break;
-    case 15:
-      jj_consume_token(15);
-               {if (true) return true;}
+    case T_BALLOONS:
+      jj_consume_token(T_BALLOONS);
+      jj_consume_token(31);
+      f = number();
+                                                   world.putBalloons(f); output = "Command:  Put Balloons";
       break;
-    case 0:
-      jj_consume_token(0);
-                         {if (true) return false;}
+    default:
+      jj_la1[0] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void pickObj() throws ParseException {
+  int f=1;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case T_CHIPS:
+      jj_consume_token(T_CHIPS);
+      jj_consume_token(31);
+      f = number();
+                                      world.pickChips(f); output = "Command:  Pick chips";
+      break;
+    case T_BALLOONS:
+      jj_consume_token(T_BALLOONS);
+      jj_consume_token(31);
+      f = number();
+                                           world.grabBalloons(f); output = "Command:  Pick balloons";
       break;
     default:
       jj_la1[1] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    throw new Error("Missing return statement in function");
   }
 
-  final public void objetoPoner() throws ParseException {
-                int f=1;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case T_CHIPS:
-      jj_consume_token(T_CHIPS);
-      jj_consume_token(16);
-      f = numero();
-                                               world.putChips(f); salida = "Command:  Put Chips";
-      break;
-    case T_BALLOONS:
-      jj_consume_token(T_BALLOONS);
-      jj_consume_token(16);
-      f = numero();
-                                                           world.putBalloons(f); salida = "Command:  Put Balloons";
-      break;
-    default:
-      jj_la1[2] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  final public void objetoRecoger() throws ParseException {
-                int f=1;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case T_CHIPS:
-      jj_consume_token(T_CHIPS);
-      jj_consume_token(16);
-      f = numero();
-                                              world.pickChips(f);salida = "Command:  Pick chips";
-      break;
-    case T_BALLOONS:
-      jj_consume_token(T_BALLOONS);
-      jj_consume_token(16);
-      f = numero();
-                                                           world.grabBalloons(f);salida="Command:  Pick balloons";
-      break;
-    default:
-      jj_la1[3] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-        /**
-	 *  reconoce un numero entero sin signo
-	 * @return el valor entero correspondiente al valor reconocido
-	 */
-  final public int numero() throws ParseException, Error {
+  final public int number() throws ParseException, Error {
                 int total=1;
-    jj_consume_token(NUMERO);
-                        try
-                        {
-                                total = Integer.parseInt(token.image);
-                        }
-                        catch (NumberFormatException ee)
-                        {
-                                // Dada la forma de NUMERO, sabemos que solo puede tener d�gitos
-                                // Por lo tanto, lo unico que podria pasar es que el numero sea muy grande
-                                {if (true) throw new Error("Number out of bounds: "+token.image+"!!");}
-                        }
-                        {if (true) return total;}
+    jj_consume_token(NUMBER);
+                try {
+                        total = Integer.parseInt(token.image);
+                } catch (NumberFormatException ee) {
+                        {if (true) throw new Error("Number out of bounds: " + token.image + "!");}
+                }
+                {if (true) return total;}
     throw new Error("Missing return statement in function");
   }
 
@@ -167,13 +91,13 @@ public class Robot implements RobotConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[4];
+  final private int[] jj_la1 = new int[2];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1f0,0x81f1,0x600,0x600,};
+      jj_la1_0 = new int[] {0xc00000,0xc00000,};
    }
 
   /** Constructor with InputStream. */
@@ -187,7 +111,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -201,7 +125,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -211,7 +135,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -221,7 +145,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -230,7 +154,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -239,7 +163,7 @@ public class Robot implements RobotConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -290,12 +214,12 @@ public class Robot implements RobotConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[17];
+    boolean[] la1tokens = new boolean[32];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -304,7 +228,7 @@ public class Robot implements RobotConstants {
         }
       }
     }
-    for (int i = 0; i < 17; i++) {
+    for (int i = 0; i < 32; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

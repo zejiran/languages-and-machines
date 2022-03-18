@@ -11,23 +11,57 @@ public interface RobotConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int T_MOVER = 4;
+  int T_DEFVAR = 5;
   /** RegularExpression Id. */
-  int T_TURNRIGHT = 5;
+  int T_ASSIGN = 6;
   /** RegularExpression Id. */
-  int T_PONER = 6;
+  int T_MOVE = 7;
   /** RegularExpression Id. */
-  int T_RECOGER = 7;
+  int T_TURN = 8;
   /** RegularExpression Id. */
-  int T_POP = 8;
+  int T_FACE = 9;
   /** RegularExpression Id. */
-  int T_BALLOONS = 9;
+  int T_PUT = 10;
   /** RegularExpression Id. */
-  int T_CHIPS = 10;
+  int T_PICK = 11;
   /** RegularExpression Id. */
-  int NUMERO = 11;
+  int T_MOVE_DIR = 12;
   /** RegularExpression Id. */
-  int DIGIT = 12;
+  int T_RUN_DIRS = 13;
+  /** RegularExpression Id. */
+  int T_MOVE_FACE = 14;
+  /** RegularExpression Id. */
+  int T_SKIP = 15;
+  /** RegularExpression Id. */
+  int T_IF = 16;
+  /** RegularExpression Id. */
+  int T_LOOP = 17;
+  /** RegularExpression Id. */
+  int T_REPEAT = 18;
+  /** RegularExpression Id. */
+  int T_DEFUN = 19;
+  /** RegularExpression Id. */
+  int T_CONDITION = 20;
+  /** RegularExpression Id. */
+  int T_OBJ = 21;
+  /** RegularExpression Id. */
+  int T_BALLOONS = 22;
+  /** RegularExpression Id. */
+  int T_CHIPS = 23;
+  /** RegularExpression Id. */
+  int T_DIRECTION_SIMPLE = 24;
+  /** RegularExpression Id. */
+  int T_DIRECTION = 25;
+  /** RegularExpression Id. */
+  int T_ORIENTATION = 26;
+  /** RegularExpression Id. */
+  int LST_DIRECTION = 27;
+  /** RegularExpression Id. */
+  int NUMBER = 28;
+  /** RegularExpression Id. */
+  int DIGIT = 29;
+  /** RegularExpression Id. */
+  int VAR = 30;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -38,18 +72,33 @@ public interface RobotConstants {
     "\" \"",
     "\"\\r\"",
     "\"\\t\"",
-    "\"Move\"",
-    "\"TURNRIGHT\"",
-    "\"Put\"",
-    "\"Pick\"",
-    "\"Pop\"",
-    "\"BALLOONS\"",
-    "\"CHIPS\"",
-    "<NUMERO>",
-    "<DIGIT>",
-    "\"(\"",
-    "\")\"",
     "\"\\n\"",
+    "\"defvar\"",
+    "\"=\"",
+    "\"move\"",
+    "\"turn\"",
+    "\"face\"",
+    "\"put\"",
+    "\"pick\"",
+    "\"move-dir\"",
+    "\"run-dirs\"",
+    "\"move-face\"",
+    "\"skip\"",
+    "\"if\"",
+    "\"loop\"",
+    "\"repeat\"",
+    "\"defun\"",
+    "<T_CONDITION>",
+    "<T_OBJ>",
+    "\"ballons\"",
+    "\"chips\"",
+    "<T_DIRECTION_SIMPLE>",
+    "<T_DIRECTION>",
+    "<T_ORIENTATION>",
+    "<LST_DIRECTION>",
+    "<NUMBER>",
+    "<DIGIT>",
+    "<VAR>",
     "\",\"",
   };
 
