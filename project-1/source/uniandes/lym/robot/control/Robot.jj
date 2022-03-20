@@ -8,7 +8,7 @@ Author: Juan Alegría - 202011282
 
 options 
 {
-	LOOKAHEAD = 1; 
+	LOOKAHEAD = 2; 
 	IGNORE_CASE = true;
 	STATIC = false;
 }
@@ -23,6 +23,9 @@ import java.awt.Point;
 import java.io.*;
 import java.util.Vector;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class Robot {
@@ -33,6 +36,8 @@ public class Robot {
 	}
 
 	String output = new String();
+	HashMap definedVariables = new HashMap();
+	HashMap definedFunctions = new HashMap();
 }
 
 PARSER_END(Robot)
@@ -65,14 +70,16 @@ TOKEN: { /* Control structures */
 		| <T_DEFUN: "defun">
 }
 
-TOKEN: { /* Conditions name*/ 
-	    < T_CONDITION: "facing-p" | "can-put-p" | "can-pick-p" | "can-move-p" | "not">
+TOKEN: { /* Conditions name*/
+	    < T_FACING: "facing-p">
+	    | < T_CAN_M: "can-move-p">
+	    | < T_CAN_P:  "can-put-p" | "can-pick-p" >
+	    |  < T_NOT:  "not" >
 }
 
 TOKEN: { /* Objects */
-  		< T_OBJ: <T_BALLOONS> | <T_CHIPS> >
-		|  <T_BALLOONS:  "ballons" >
-		|	<T_CHIPS:     "chips" >	
+		<T_BALLOONS:  ":balloons" >
+		|	<T_CHIPS:     ":chips" >	
 }
 
 TOKEN: { 
@@ -85,41 +92,60 @@ TOKEN: {
 TOKEN: {
         <NUMBER: (<DIGIT>)+ >
 		|  	<#DIGIT: ["0"-"9"] >
-		|  < VAR: (["a"-"z"] | ["A"-"Z"])+ (["0"-"9"])* (["a"-"z"])* (["A"-"Z"])* (".")* ("#")* ("@")* ("_")* ("$")*>
+		|  < NAME: (["a"-"z"] | ["A"-"Z"])+ (["0"-"9"])* (["a"-"z"])* (["A"-"Z"])* (".")* ("#")* ("@")* ("_")* ("$")*>
 }
 
 boolean command(StringBuffer system_) : {	
 		int x;
+		String y;
 		output = new String();
-		String[] defined_names;
 	}
-	
 	{
+		(
+	    "(" < T_DEFVAR > y = name() x = number() ")" { definedVariables.put(y, x); output = "Command: defined variable " + y + " with value " + definedVariables.get(y);}
+	    | "(" < T_ASSIGN > y = assignVar(definedVariables) ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
+	    | "(" < T_MOVE > x = number() ")" { world.moveForward(x); output = "Command: Move " + x;}
+	    | "(" <  T_TURN > < T_DIRECTION_SIMPLE > ")" { }
+	    | "(" < T_FACE > < T_ORIENTATION > ")" { }
+	    | "(" < T_PUT > putObj() ")"
+	    | "(" < T_PICK > pickObj() ")" 
+	    | "("  < T_MOVE_DIR > < NUMBER > < T_DIRECTION >")" { }
+	    | "("  < T_RUN_DIRS > < LST_DIRECTION > ")" { }
+	    | "("  < T_MOVE_FACE > < NUMBER > < T_ORIENTATION > ")" { }
+	    | "("  < T_SKIP > ")" { }
+//	    "("  <  > ")" { }
+//		(funcname params)
+		)
+//		|
 //		(
-//	    <T_TURNRIGHT> "(" ")" { world.turnRight(); salida = "Command: Turnright"; }
-//		| 	<T_MOVE>  "(" x=numero() ")" {world.moveForward(x);salida = "Command: Moveforward ";}  
-//		|  <T_PONER> "("  objetoPoner() ")"					  			
-//		|  <T_RECOGER> "("  objetoRecoger()  ")"	
-//	    |  < T_POP > "(" x=numero() ")" {world.popBalloons(x); output = "Comando:  Pop";}
+//		  
 //		)
 
-//		(defvar name n)
-//		(= name n)
-//		(move n)
-//		(turn D)
-//		(face O)
-//		(put X n)
-//		(pick X n)
-//		(move-dir n D)
-//		(run-dirsr Ds)
-//		(move-face n O)
-//		(skip)
-//		(funcname params)
+//	    | "(" < T_NOT > ")"
+
+
+
+//TOKEN: { /* Control structures */ 
+//		<T_IF:  "if">
+//		| <T_LOOP: "loop">
+//		| <T_REPEAT: "repeat">
+//		| <T_DEFUN: "defun">
+//}
+//
+//TOKEN: { /* Conditions name*/
+//	    < T_FACING: "facing-p">
+//	    | < T_CAN_M: "can-move-p">
+//	    | < T_CAN_P:  "can-put-p" | "can-pick-p" >
+//	    |  < T_NOT:  "not" >
+//}
+//
 
 	{
 		system_.append(output);
 		return true;
 	}
+
+	| <EOF> {return false;} 
 }
 
 void putObj() :
@@ -127,16 +153,16 @@ void putObj() :
 		int f=1;	
 	}
 	{
-		( <T_CHIPS>    "," f = number() {world.putChips(f); output = "Command:  Put Chips"; })
-		| ( <T_BALLOONS>   "," f=number() {world.putBalloons(f); output = "Command:  Put Balloons";})
+		( f = number() <T_CHIPS> {world.putChips(f); output = "Command:  Put Chips"; })
+		| ( f=number() <T_BALLOONS> {world.putBalloons(f); output = "Command:  Put Balloons";})
 }
 
 void pickObj() : {
   int f=1;	
 }
 {
-	( <T_CHIPS>   "," f=number() {world.pickChips(f); output = "Command:  Pick chips";})
-	| ( <T_BALLOONS>   "," f=number() {world.grabBalloons(f); output = "Command:  Pick balloons";})	 
+	( f=number() <T_CHIPS> {world.pickChips(f); output = "Command:  Pick chips";})
+	| ( f=number() < T_BALLOONS >{world.grabBalloons(f); output = "Command:  Pick balloons";})	 
 }
 
 int number() throws Error: {	
@@ -152,4 +178,33 @@ int number() throws Error: {
 		}
 		return total;
 	}
+}
+
+String name(): {
+}
+{
+  	< NAME >
+  	{ 
+	  	String name = token.image;
+		return name;
+	}
+}
+
+String assignVar(HashMap vars) throws Error: {
+}
+{
+  < NAME >
+  {
+    String variable = token.image;
+    boolean isVarDefined = vars.containsKey(variable);
+  }
+  < NUMBER >
+  {
+    if (isVarDefined) {
+      	vars.put(variable, token.image);
+		return variable;
+    } else {
+		throw new Error("Error: Use of undefined variable " + variable);
+    }
+ }
 }

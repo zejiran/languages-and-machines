@@ -41,27 +41,31 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int T_DEFUN = 19;
   /** RegularExpression Id. */
-  int T_CONDITION = 20;
+  int T_FACING = 20;
   /** RegularExpression Id. */
-  int T_OBJ = 21;
+  int T_CAN_M = 21;
   /** RegularExpression Id. */
-  int T_BALLOONS = 22;
+  int T_CAN_P = 22;
   /** RegularExpression Id. */
-  int T_CHIPS = 23;
+  int T_NOT = 23;
   /** RegularExpression Id. */
-  int T_DIRECTION_SIMPLE = 24;
+  int T_BALLOONS = 24;
   /** RegularExpression Id. */
-  int T_DIRECTION = 25;
+  int T_CHIPS = 25;
   /** RegularExpression Id. */
-  int T_ORIENTATION = 26;
+  int T_DIRECTION_SIMPLE = 26;
   /** RegularExpression Id. */
-  int LST_DIRECTION = 27;
+  int T_DIRECTION = 27;
   /** RegularExpression Id. */
-  int NUMBER = 28;
+  int T_ORIENTATION = 28;
   /** RegularExpression Id. */
-  int DIGIT = 29;
+  int LST_DIRECTION = 29;
   /** RegularExpression Id. */
-  int VAR = 30;
+  int NUMBER = 30;
+  /** RegularExpression Id. */
+  int DIGIT = 31;
+  /** RegularExpression Id. */
+  int NAME = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -88,18 +92,21 @@ public interface RobotConstants {
     "\"loop\"",
     "\"repeat\"",
     "\"defun\"",
-    "<T_CONDITION>",
-    "<T_OBJ>",
-    "\"ballons\"",
-    "\"chips\"",
+    "\"facing-p\"",
+    "\"can-move-p\"",
+    "<T_CAN_P>",
+    "\"not\"",
+    "\":balloons\"",
+    "\":chips\"",
     "<T_DIRECTION_SIMPLE>",
     "<T_DIRECTION>",
     "<T_ORIENTATION>",
     "<LST_DIRECTION>",
     "<NUMBER>",
     "<DIGIT>",
-    "<VAR>",
-    "\",\"",
+    "<NAME>",
+    "\"(\"",
+    "\")\"",
   };
 
 }
