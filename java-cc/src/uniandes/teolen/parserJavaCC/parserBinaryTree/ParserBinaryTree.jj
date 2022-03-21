@@ -1,0 +1,139 @@
+/**
+ * TP1.
+ *
+ * JavaCC Binary Tree Parser.
+ *
+ * Author: Juan Alegría - 202011282
+ */
+
+options {
+  IGNORE_CASE = false;
+  STATIC = false;
+}
+
+PARSER_BEGIN(ParserBinaryTree)
+
+package uniandes.teolen.parserJavaCC.parserBinaryTree;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class ParserBinaryTree {
+	List idsList = new ArrayList();
+}
+
+PARSER_END(ParserBinaryTree)
+
+SKIP :
+{
+  " "
+| "\r" 
+| "\t"
+| "\n"
+}
+
+TOKEN : 
+{
+  < T_TREE : "TREE" >
+  | < T_NODE_LST: "NODES" >
+}
+
+TOKEN :
+{
+  <ID: "$" < DIGIT > < DIGIT > >
+  | < ID_NULL: "$NULL">
+  | <NUMBER: (<DIGIT>)+ >
+  | < #DIGIT : [ "0"-"9" ] >
+  | < NAME: (["a"-"z"] | ["A"-"Z"])+ (["0"-"9"])* (["a"-"z"])* (["A"-"Z"])* (".")* ("#")* ("@")* ("_")* ("$")*>
+}
+
+void input() :
+{}
+{
+  < T_TREE > "(" description() nodes() verifyNodesUsage()
+}
+
+void description() :
+{}
+{
+  < NAME > ";"
+}
+
+void nodes() :
+{}
+{
+  < T_NODE_LST > "(" node() ( "," node() )* ")"
+}
+
+void node() :
+{}
+{
+  verifyIdInTree() ":" leftChild() rightChild() (properties())?
+}
+
+void leftChild():
+{}
+{
+  addNewId() ":"
+}
+
+void rightChild():
+{}
+{
+  addNewId()
+}
+
+void properties():
+{}
+{
+	":" "<" property() ( ">,<" property() )* ">"
+}
+
+void property():
+{}
+{
+	< NAME > "," < NUMBER >
+}
+
+void verifyIdInTree() throws Error:
+{}
+{
+  < ID >
+  {
+    if (idsList.size() == 0) {
+		return;
+    }
+    	
+    boolean isIdDefined = idsList.contains(token.image);
+    
+    if (!isIdDefined) {
+		throw new Error("Error: use of undefined node in tree " + token.image);
+   	} else {
+		idsList.remove(token.image);
+ 	}
+  }
+  |
+  < ID_NULL > 
+}
+
+void addNewId():
+{}
+{
+  < ID >
+  {
+		idsList.add(token.image);
+  }
+  |
+  < ID_NULL > 
+}
+
+void verifyNodesUsage() throws Error:
+{}
+{
+  ")"
+  {
+    if (idsList.size() != 0) {
+    	throw new Error("Error: defined nodes " + idsList + " not used in tree ");
+ 	 }
+  }
+}

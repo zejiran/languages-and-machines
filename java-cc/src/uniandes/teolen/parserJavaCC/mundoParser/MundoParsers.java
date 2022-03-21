@@ -5,6 +5,7 @@ import java.util.*;
 import uniandes.teolen.parserJavaCC.myParser.ParserCAML;
 import uniandes.teolen.parserJavaCC.myParserDR.ParserDR;
 import uniandes.teolen.parserJavaCC.newParser.NuevoParser;
+import uniandes.teolen.parserJavaCC.parserBinaryTree.ParserBinaryTree;
 import uniandes.teolen.parserJavaCC.parserCAML.ParserCAMLco;
 import uniandes.teolen.parserJavaCC.parserProlog.ParserProlog;
 import uniandes.teolen.parserJavaCC.parserGrammars.ParserG;
@@ -30,6 +31,7 @@ public class MundoParsers {
 	    parsers.add("Nuevo Parser");
 	    parsers.add("Parser Prolog");
 	    parsers.add("Parser G");
+	    parsers.add("Binary Tree Parser");
 	    
 	    currentParser =  0;
 
@@ -53,6 +55,10 @@ public class MundoParsers {
 	
 	public NuevoParser getNuevoParser(){
 		return new NuevoParser(System.in);
+	}
+	
+	public ParserBinaryTree getParserBinaryTree(){
+		return new ParserBinaryTree(System.in);
 	}
 	
 	public ParserG getGParser(){
@@ -153,6 +159,18 @@ public class MundoParsers {
 			nuevoParser.ReInit(new java.io.StringReader(texto));
 			try {
 		    	nuevoParser.prod(); 
+		    	resp = new String("OK    \n");
+		    }catch (Exception e) {
+		        resp = new String ("Error de Sintaxis: "+e.getMessage());
+		     } catch (Error e) {
+		    	 resp = new String ("Error Lexico: "+e.getMessage());
+		     }
+		}
+		else if(parsers.get(currentParser).equals("Binary Tree Parser")){
+			ParserBinaryTree nuevoParser = getParserBinaryTree();
+			nuevoParser.ReInit(new java.io.StringReader(texto));
+			try {
+		    	nuevoParser.input(); 
 		    	resp = new String("OK    \n");
 		    }catch (Exception e) {
 		        resp = new String ("Error de Sintaxis: "+e.getMessage());
