@@ -416,7 +416,7 @@ public class RobotWorld {
 			for(int i=posX; i <= newPos && !checkBlocked; i++) {
 				checkBlocked = isBlocked(new Point(i, posY));
 			}
-		} else if(dir==NORTH) {
+		} else if(dir==WEST) {
 			for(int i=posX; i >= newPos && !checkBlocked; i--) {
 				checkBlocked = isBlocked(new Point(i, posY));
 			}

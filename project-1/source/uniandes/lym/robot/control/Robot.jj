@@ -103,25 +103,25 @@ boolean command(StringBuffer system_) : {
 	}
 	{
 		(
-	    "(" < T_DEFVAR > y = name() x = number() ")" { definedVariables.put(y, x); output = "Command: defined variable " + y + " with value " + definedVariables.get(y);}
-	    | "(" < T_ASSIGN > y = assignVar() ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
-	    | "(" < T_MOVE > x = number() ")" { world.moveForward(x); output = "Command: Move " + x;}
-	    | "(" <  T_TURN > < T_DIRECTION_SIMPLE > ")" { }
-	    | "(" < T_FACE > < T_ORIENTATION > ")" { }
-	    | "(" < T_PUT > putObj() ")"
-	    | "(" < T_PICK > pickObj() ")" 
-	    | "("  < T_MOVE_DIR > < NUMBER > < T_DIRECTION >")" { }
-	    | "("  < T_RUN_DIRS > < LST_DIRECTION > ")" { }
-	    | "("  < T_MOVE_FACE > < NUMBER > < T_ORIENTATION > ")" { }
-	    | "("  < T_SKIP > ")" { }
-	    | "(" y = definedFunction() y = paramsVerification(y) executeFunction(y) ")"
+		    "(" < T_DEFVAR > y = name() x = number() ")" { definedVariables.put(y, x); output = "Command: defined variable " + y + " with value " + definedVariables.get(y);}
+		    | "(" < T_ASSIGN > y = assignVar() ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
+		    | "(" < T_MOVE > x = number() ")" { world.moveForward(x); output = "Command: Move " + x;}
+		    | "(" <  T_TURN > < T_DIRECTION_SIMPLE > ")" { }
+		    | "(" < T_FACE > < T_ORIENTATION > ")" { }
+		    | "(" < T_PUT > putObj() ")"
+		    | "(" < T_PICK > pickObj() ")" 
+		    | "("  < T_MOVE_DIR > < NUMBER > < T_DIRECTION >")" { }
+		    | "("  < T_RUN_DIRS > < LST_DIRECTION > ")" { }
+		    | "("  < T_MOVE_FACE > < NUMBER > < T_ORIENTATION > ")" { }
+		    | "("  < T_SKIP > ")" { }
+		    | "(" y = definedFunction() y = paramsVerification(y) executeFunction(y) ")"
 		)
 		|
 		(
-		"(" < T_IF > z = condition() blockTrue(z) blockFalse(z) ")" { }
-	    | "(" < T_LOOP > z = condition() blockTrue(z) ")" { }
-	    | "(" < T_REPEAT > ( x = getVarValue() | x = number() ) blockRepetition(x) ")" { }
-	    | "("  < T_DEFUN > y = name() y = params(y) y = blockDefinition(y) ")" { }
+			"(" < T_IF > z = condition() blockTrue(z) blockFalse(z) ")" { }
+		    | "(" < T_LOOP > z = condition() blockTrue(z) ")" { }
+		    | "(" < T_REPEAT > ( x = getVarValue() | x = number() ) blockRepetition(x) ")" { }
+		    | "("  < T_DEFUN > y = name() y = params(y) y = blockDefinition(y) ")" { }
 		)
 	{
 		system_.append(output);
