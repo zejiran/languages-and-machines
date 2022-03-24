@@ -1,0 +1,10 @@
+ajaxload:
+  http://www.ajaxload.info/
+famfamfam:
+  http://www.famfamfam.com/lab/icons/
+jlfgr:
+  http://java.sun.com/developer/techDocs/hi/repository/
+wikimedia:
+  http://commons.wikimedia.org/wiki/
+windows:
+  http://download.oracle.com/javase/tutorial/uiswing/components/dialog.html
