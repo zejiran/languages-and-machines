@@ -1,10 +1,10 @@
-/*
-Project 1.
-
-JavaCC Robot Language Interpreter.
-
-Author: Juan Alegría - 202011282
- **/
+/**
+ * Project 1.
+ *
+ * JavaCC Robot Language Interpreter.
+ *
+ * Author: Juan Alegría - 202011282
+ */
 
 options 
 {
@@ -98,12 +98,13 @@ TOKEN: {
 boolean command(StringBuffer system_) : {	
 		int x;
 		String y;
+		boolean z;
 		output = new String();
 	}
 	{
 		(
 	    "(" < T_DEFVAR > y = name() x = number() ")" { definedVariables.put(y, x); output = "Command: defined variable " + y + " with value " + definedVariables.get(y);}
-	    | "(" < T_ASSIGN > y = assignVar(definedVariables) ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
+	    | "(" < T_ASSIGN > y = assignVar() ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
 	    | "(" < T_MOVE > x = number() ")" { world.moveForward(x); output = "Command: Move " + x;}
 	    | "(" <  T_TURN > < T_DIRECTION_SIMPLE > ")" { }
 	    | "(" < T_FACE > < T_ORIENTATION > ")" { }
@@ -113,33 +114,15 @@ boolean command(StringBuffer system_) : {
 	    | "("  < T_RUN_DIRS > < LST_DIRECTION > ")" { }
 	    | "("  < T_MOVE_FACE > < NUMBER > < T_ORIENTATION > ")" { }
 	    | "("  < T_SKIP > ")" { }
-//	    "("  <  > ")" { }
-//		(funcname params)
+	    | "(" y = definedFunction() y = paramsVerification(y) executeFunction(y) ")"
 		)
-//		|
-//		(
-//		  
-//		)
-
-//	    | "(" < T_NOT > ")"
-
-
-
-//TOKEN: { /* Control structures */ 
-//		<T_IF:  "if">
-//		| <T_LOOP: "loop">
-//		| <T_REPEAT: "repeat">
-//		| <T_DEFUN: "defun">
-//}
-//
-//TOKEN: { /* Conditions name*/
-//	    < T_FACING: "facing-p">
-//	    | < T_CAN_M: "can-move-p">
-//	    | < T_CAN_P:  "can-put-p" | "can-pick-p" >
-//	    |  < T_NOT:  "not" >
-//}
-//
-
+		|
+		(
+		"(" < T_IF > z = condition() blockTrue(z) blockFalse(z) ")" { }
+	    | "(" < T_LOOP > z = condition() blockTrue(z) ")" { }
+	    | "(" < T_REPEAT > ( x = getVarValue() | x = number() ) blockRepetition(x) ")" { }
+	    | "("  < T_DEFUN > y = name() y = params(y) y = blockDefinition(y) ")" { }
+		)
 	{
 		system_.append(output);
 		return true;
@@ -190,13 +173,13 @@ String name(): {
 	}
 }
 
-String assignVar(HashMap vars) throws Error: {
+String assignVar() throws Error: {
 }
 {
   < NAME >
   {
     String variable = token.image;
-    boolean isVarDefined = vars.containsKey(variable);
+    boolean isVarDefined = definedVariables.containsKey(variable);
   }
   < NUMBER >
   {
@@ -206,5 +189,37 @@ String assignVar(HashMap vars) throws Error: {
     } else {
 		throw new Error("Error: Use of undefined variable " + variable);
     }
- }
+  }
+} 
+
+int getVarValue():
+{ }
+{
+  < NAME >
+  {
+    String variable = token.image;
+    boolean isVarDefined = definedVariables.containsKey(variable);
+    
+    if (isVarDefined) {
+		return definedVariables.get(variable);
+    } else {
+		throw new Error("Error: Use of undefined variable " + variable);
+    }
+  }
+} 
+
+void condition(): {
+	boolean evaluation = true;
 }
+{
+  "(" < T_FACING > < T_ORIENTATION > ")" { }
+  | "(" < T_CAN_M > < T_DIRECTION >")" {} 
+  | "(" < T_CAN_P > < T_BALLOONS > < T_CHIPS > ( x = number() | x = getVarValue() )")" {}
+  | "(" < T_NOT > condition() ")" {}
+  | "(" definedFunction() y = paramsVerification(y) evaluation = executeFunction(y) ")" {}
+  {
+    return evaluation;
+  }
+}
+
+
