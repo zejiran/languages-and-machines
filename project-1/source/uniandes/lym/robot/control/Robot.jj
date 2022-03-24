@@ -36,8 +36,105 @@ public class Robot {
 	}
 
 	String output = new String();
+	
 	HashMap definedVariables = new HashMap();
 	HashMap definedFunctions = new HashMap();
+
+	String turn(String dir) {
+	  	String returnMessage = "";
+	  	
+		if (dir.equals(":right")) { 
+			world.turnRight();
+			returnMessage = "turned right";
+		}
+		
+		if (dir.equals(":left")) {
+		  	world.turnRight();
+		 	world.turnRight();
+		 	world.turnRight();
+		  	returnMessage = "turned left";
+		}
+		
+		 if (dir.equals(":around")) {
+		   	world.turnRight();
+		   	world.turnRight();
+		 	returnMessage = "turned around";
+		 }
+
+		 return returnMessage;
+	}
+
+	String face(String orientation) {
+		String returnMessage = "";
+		
+		if (orientation.equals(":north")) {
+		  while (!world.facingNorth()) {
+			world.turnRight();
+			returnMessage = "facing north";
+		  }
+		}
+
+		if (orientation.equals(":south")) {
+		  while (!world.facingSouth()) {
+			world.turnRight();
+			returnMessage = "facing south";
+		  }
+		}
+
+		if (orientation.equals(":west")) {
+		  while (!world.facingWest()) {
+			world.turnRight();
+			returnMessage = "facing west";
+		  }
+		}
+
+		if (orientation.equals(":east")) {
+		  while (!world.facingEast()) {
+			world.turnRight();
+			returnMessage = "facing east";
+		  }
+		}
+
+		return returnMessage;
+	}
+
+	String moveDir(int times, String direction) {
+		String returnMessage = "";
+
+		if (direction.equals(":front")) {
+		  returnMessage = "moving to the front X " + times;
+		  while (times != 0) {
+			world.up();
+			times -= 1;
+		  }
+		}
+
+		if (direction.equals(":right")) {
+		  returnMessage = "moving to the right X " + times;
+		  while (times != 0) {
+			world.right();
+			times -= 1;
+		  }
+		}
+
+		if (direction.equals(":left")) {
+		  returnMessage = "moving to the left X " + times;
+		  while (times != 0) {
+			world.left();
+			times -= 1;
+		  }
+		}
+
+		if (direction.equals(":back")) {
+		  returnMessage = "moving to the back X " + times;
+		  while (times != 0) {
+			world.down();
+			times -= 1;
+		  }
+		}
+		
+		return returnMessage;
+	}
 }
 
 PARSER_END(Robot)
@@ -73,7 +170,8 @@ TOKEN: { /* Control structures */
 TOKEN: { /* Conditions name*/
 	    < T_FACING: "facing-p">
 	    | < T_CAN_M: "can-move-p">
-	    | < T_CAN_P:  "can-put-p" | "can-pick-p" >
+	    | < T_CAN_PUT:  "can-put-p" >
+	    | < T_CAN_PICK:  "can-pick-p" >
 	    |  < T_NOT:  "not" >
 }
 
@@ -84,9 +182,9 @@ TOKEN: { /* Objects */
 
 TOKEN: { 
   		< T_DIRECTION_SIMPLE: ":left" | ":right" | ":around" >
-        | < T_DIRECTION: ":front" | ":right" | ":left" | "back" >
+        | < T_DIRECTION: ":front" | ":right" | ":left" | ":back" >
         | < T_ORIENTATION: ":north" | ":south" | ":east" | ":west" >
-        | <LST_DIRECTION: (<T_DIRECTION>)+ >
+        | <LST_DIRECTION: (<T_DIRECTION> | <  T_DIRECTION_SIMPLE >)+ >
 }
 
 TOKEN: {
@@ -105,23 +203,20 @@ boolean command(StringBuffer system_) : {
 		(
 		    "(" < T_DEFVAR > y = name() x = number() ")" { definedVariables.put(y, x); output = "Command: defined variable " + y + " with value " + definedVariables.get(y);}
 		    | "(" < T_ASSIGN > y = assignVar() ")" { output = "Command: assign value " + definedVariables.get(y) + " to variable " + y;}
-		    | "(" < T_MOVE > x = number() ")" { world.moveForward(x); output = "Command: Move " + x;}
-		    | "(" <  T_TURN > < T_DIRECTION_SIMPLE > ")" { }
-		    | "(" < T_FACE > < T_ORIENTATION > ")" { }
+		    | "(" < T_MOVE > ( x = getVarValue() | x = number() ) ")" { world.moveForward(x); output = "Command: move " + x;}
+		    | "(" <  T_TURN > y = getSimpleDirection() ")" { y = turn(y); output = "Command: " + y; }
+		    | "(" < T_FACE > y = getOrientation() ")" { y = face(y); output = "Command: " + y; }
 		    | "(" < T_PUT > putObj() ")"
 		    | "(" < T_PICK > pickObj() ")" 
-		    | "("  < T_MOVE_DIR > < NUMBER > < T_DIRECTION >")" { }
-		    | "("  < T_RUN_DIRS > < LST_DIRECTION > ")" { }
-		    | "("  < T_MOVE_FACE > < NUMBER > < T_ORIENTATION > ")" { }
-		    | "("  < T_SKIP > ")" { }
-		    | "(" y = definedFunction() y = paramsVerification(y) executeFunction(y) ")"
-		)
-		|
-		(
-			"(" < T_IF > z = condition() blockTrue(z) blockFalse(z) ")" { }
-		    | "(" < T_LOOP > z = condition() blockTrue(z) ")" { }
+		    | "("  < T_MOVE_DIR > ( x = getVarValue() | x = number() ) y = getDirection() ")" { y = moveDir(x, y); output = "Command: " + y; }
+		    | "("  < T_RUN_DIRS > y = getDirectionList() ")" { /*runDirs(w);*/ }
+		    | "("  < T_MOVE_FACE > ( x = getVarValue() | x = number() ) y = getOrientation() ")" {face(y); world.moveForward(x); output = "Command move face"; }
+		    | "("  < T_SKIP > ")" {output = "Command: Skip"; }
+		    | "(" y = definedFunction() y = paramsVerification(y) executeFunction(y) ")" { }
+			| "(" < T_IF > z = condition() executeBlock(z) executeBlock(!z) ")" { }
+		    | "(" < T_LOOP > z = condition() executeBlock(z) ")" { }
 		    | "(" < T_REPEAT > ( x = getVarValue() | x = number() ) blockRepetition(x) ")" { }
-		    | "("  < T_DEFUN > y = name() y = params(y) y = blockDefinition(y) ")" { }
+		    | "("  < T_DEFUN > y = name() y = params(y) y = functionBlock(y) ")" { }
 		)
 	{
 		system_.append(output);
@@ -136,16 +231,16 @@ void putObj() :
 		int f=1;	
 	}
 	{
-		( f = number() <T_CHIPS> {world.putChips(f); output = "Command:  Put Chips"; })
-		| ( f=number() <T_BALLOONS> {world.putBalloons(f); output = "Command:  Put Balloons";})
+		( <T_CHIPS> ( f = getVarValue() | f = number() ) {world.putChips(f); output = "Command:  Put Chips"; })
+		| <T_BALLOONS> ( f=number()  {world.putBalloons(f); output = "Command:  Put Balloons";})
 }
 
 void pickObj() : {
   int f=1;	
 }
 {
-	( f=number() <T_CHIPS> {world.pickChips(f); output = "Command:  Pick chips";})
-	| ( f=number() < T_BALLOONS >{world.grabBalloons(f); output = "Command:  Pick balloons";})	 
+	( <T_CHIPS> ( f = getVarValue() | f = number() ) {world.pickChips(f); output = "Command:  Pick chips";})
+	| ( < T_BALLOONS >  ( f = getVarValue() | f = number() ) {world.grabBalloons(f); output = "Command:  Pick balloons";})	 
 }
 
 int number() throws Error: {	
@@ -173,6 +268,56 @@ String name(): {
 	}
 }
 
+String getSimpleDirection(): {
+}
+{
+  	< T_DIRECTION_SIMPLE >
+  	{ 
+	  	String direction = token.image;
+		return direction;
+	}
+}
+
+String getDirection() throws Error: {
+}
+{
+  	(< T_DIRECTION > | < T_DIRECTION_SIMPLE >)
+  	{ 
+	  	String direction = token.image;
+
+		if (direction.equals(":around")) {
+		  throw new Error("Error: incorrect direction for this command");
+	 	}
+	 	
+		return direction;
+	}
+}
+
+String getDirectionList() throws Error: {
+  String directions = "";
+}
+{
+  	(< T_DIRECTION > | < T_DIRECTION_SIMPLE >)+
+  	{ 
+	  	directions += token.image;
+		if (directions.contains(":around")) {
+		  throw new Error("Error: incorrect direction for this command");
+	 	}
+	 	
+		return directions;
+	}
+}
+
+String getOrientation(): {
+}
+{
+  	< T_ORIENTATION >
+  	{ 
+	  	String orientation = token.image;
+		return orientation;
+	}
+}
+
 String assignVar() throws Error: {
 }
 {
@@ -184,7 +329,7 @@ String assignVar() throws Error: {
   < NUMBER >
   {
     if (isVarDefined) {
-      	vars.put(variable, token.image);
+      	definedVariables.put(variable, token.image);
 		return variable;
     } else {
 		throw new Error("Error: Use of undefined variable " + variable);
@@ -192,7 +337,7 @@ String assignVar() throws Error: {
   }
 } 
 
-int getVarValue():
+int getVarValue() throws Error: 
 { }
 {
   < NAME >
@@ -201,25 +346,99 @@ int getVarValue():
     boolean isVarDefined = definedVariables.containsKey(variable);
     
     if (isVarDefined) {
-		return definedVariables.get(variable);
+		return (int) definedVariables.get(variable);
     } else {
 		throw new Error("Error: Use of undefined variable " + variable);
     }
   }
 } 
 
-void condition(): {
+boolean condition(): {
+  	int x;
+  	String y;
 	boolean evaluation = true;
 }
 {
   "(" < T_FACING > < T_ORIENTATION > ")" { }
   | "(" < T_CAN_M > < T_DIRECTION >")" {} 
-  | "(" < T_CAN_P > < T_BALLOONS > < T_CHIPS > ( x = number() | x = getVarValue() )")" {}
+  | "(" < T_CAN_PUT > ( < T_BALLOONS > | < T_CHIPS > ) ( x = number() | x = getVarValue() )")" {}
+  | "(" < T_CAN_PICK > ( < T_BALLOONS > | < T_CHIPS > ) ( x = number() | x = getVarValue() )")" { evaluation = true; }
   | "(" < T_NOT > condition() ")" {}
-  | "(" definedFunction() y = paramsVerification(y) evaluation = executeFunction(y) ")" {}
+  | "(" y = definedFunction() y = paramsVerification(y) evaluation = executeFunction(y) ")" {}
   {
     return evaluation;
   }
 }
 
+String definedFunction() throws Error: 
+{ }
+{
+  < NAME >
+  {
+    String calledFunction = token.image;
+    boolean isFuncDefined = definedFunctions.containsKey(calledFunction);
+    
+    if (isFuncDefined) {
+		return (String) definedFunctions.get(calledFunction);
+    } else {
+		throw new Error("Error: Use of undefined function " + calledFunction);
+    }
+  }
+} 
 
+String params(String functionName) throws Error: 
+{}
+{
+  "(" (< NAME >)* ")"
+  {
+    return "true";
+  }
+}
+
+String paramsVerification(String functionName):
+{}
+{
+  "(" (< NUMBER >)* ")"
+  {
+    return "true";
+  }
+}
+
+boolean executeFunction(String functionInformation):
+{}
+{
+  < NAME >
+  {
+    return true;
+  }
+}
+
+void executeBlock(boolean isExecutable):
+{}
+{
+  < NAME >
+  { 
+  if (isExecutable) {
+    // Run block
+    return;
+  }
+  }
+}
+
+String functionBlock(String funcNameAndParams): {
+}
+{
+  < NAME >
+  {
+    return "";
+  }
+}
+
+void blockRepetition(int repetitions): {
+}
+{
+  < NAME >
+  {
+    return;
+  }
+}

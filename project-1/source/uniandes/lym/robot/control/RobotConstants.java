@@ -45,27 +45,29 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int T_CAN_M = 21;
   /** RegularExpression Id. */
-  int T_CAN_P = 22;
+  int T_CAN_PUT = 22;
   /** RegularExpression Id. */
-  int T_NOT = 23;
+  int T_CAN_PICK = 23;
   /** RegularExpression Id. */
-  int T_BALLOONS = 24;
+  int T_NOT = 24;
   /** RegularExpression Id. */
-  int T_CHIPS = 25;
+  int T_BALLOONS = 25;
   /** RegularExpression Id. */
-  int T_DIRECTION_SIMPLE = 26;
+  int T_CHIPS = 26;
   /** RegularExpression Id. */
-  int T_DIRECTION = 27;
+  int T_DIRECTION_SIMPLE = 27;
   /** RegularExpression Id. */
-  int T_ORIENTATION = 28;
+  int T_DIRECTION = 28;
   /** RegularExpression Id. */
-  int LST_DIRECTION = 29;
+  int T_ORIENTATION = 29;
   /** RegularExpression Id. */
-  int NUMBER = 30;
+  int LST_DIRECTION = 30;
   /** RegularExpression Id. */
-  int DIGIT = 31;
+  int NUMBER = 31;
   /** RegularExpression Id. */
-  int NAME = 32;
+  int DIGIT = 32;
+  /** RegularExpression Id. */
+  int NAME = 33;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -94,7 +96,8 @@ public interface RobotConstants {
     "\"defun\"",
     "\"facing-p\"",
     "\"can-move-p\"",
-    "<T_CAN_P>",
+    "\"can-put-p\"",
+    "\"can-pick-p\"",
     "\"not\"",
     "\":balloons\"",
     "\":chips\"",
