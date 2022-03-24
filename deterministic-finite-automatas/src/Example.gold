@@ -1,0 +1,53 @@
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+using gold.structures.set.*
+
+//  Strings of {a,b,c}
+//  Even number of a’s
+// c cannot appear in positions that are multiples of 3.
+// No two consecutive b’s
+
+
+procedure main(args:String[]) begin
+	
+	Σ:= ('a'‥ 'c')
+	
+
+	
+	
+
+	
+	Q:= ({0,1}× (0‥2) ×{ true,false}) ∪ {"err"}
+	
+	q₀:= ⟨ 0, 1, false ⟩ 
+	F:=   ({0}× (0‥2) ×{ true,false}) 
+	
+	M:=GDeterministicAutomaton(Q,Σ,q₀,F,d)
+	
+	// if you run the program  with GUI as an argument it will generate the viewing window
+	//  if not you can test it via the console
+	
+	if (args.length != 0  and args[0]="GUI") then
+		GAutomataFrame.show(M)
+	else
+		Utilities.test(M) // function found in utilities .
+	end
+end
+
+
+function d(q,x) begin // q=err
+  return q
+end
+
+function d(⟨As,pos,B⟩, s) begin
+	if s='a'	then return ⟨(As+1)%2,(pos+1)%3,false⟩										// as long as what we read is not in the set and we don't read x'
+	elseif s='b' and not(B) then return ⟨As,(pos+1)%3,true⟩ 
+	elseif s='c' and pos≠0 then return ⟨As,(pos+1)%3,false⟩ 
+	else return "err"
+	end
+end
+

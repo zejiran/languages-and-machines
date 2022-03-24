@@ -1,0 +1,19 @@
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	
+	M:=GDeterministicAutomaton( {0,1} ,('a'‥ 'b'),0,{0},d)
+	GAutomataFrame.show(M)
+end
+function d(q,x) begin
+  if x='a' then return  (q+1)% 2
+  	
+  	
+  else return q
+  	
+  	
+  end
+end

@@ -1,0 +1,37 @@
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+// w ∈ {a,b,x}*,   w=AxB, A∈{a,b}*,  B ∈ {a,b}*,  #a(A)%3 = #b(B) % 3}
+//  solution 2
+
+
+procedure main(args:String[]) begin
+	Q :=({0,1,2}×(0‥2)) ∪ {0,1,2,"E"}
+	Σ := {'a','b','x'}
+	F:= {⟨s,s⟩ | s in (0‥2)}
+	M:=GDeterministicAutomaton(Q ,Σ ,0,F,d)
+	GAutomataFrame.show(M)
+end
+
+function d(q,s) begin
+ if q="E" then  return q
+ elseif s='a' then
+ 	return (q+1)%3
+ elseif s='b' then
+	 return q
+else // s= 'x'
+	return ⟨q,0⟩
+end
+end
+
+function d(⟨a,c⟩,s) begin
+  if  s='a' then
+  	 return ⟨a,c⟩
+  elseif s='b' then
+	  	 return ⟨a,(c+1)%3⟩
+ else 
+ 	 return "E"
+end
+end

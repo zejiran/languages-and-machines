@@ -1,0 +1,29 @@
+using gold.**
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+	Utilities.test(createAutomaton())
+
+
+end
+function getName() begin
+	return "Has cat"
+end
+function createAutomaton():IAutomaton begin
+	Q:={"_cat","c_at","ca_t","cat_"}
+	Σ:={'c','a','t'}
+	q₀:="_cat"
+	F:={"cat_"}
+	δ:=⟦⟦"_cat",'c',"c_at"⟧,
+		⟦"_cat",'a',"_cat"⟧,
+		⟦"_cat",'t',"_cat"⟧,
+		⟦"c_at",'c',"c_at"⟧,
+		⟦"c_at",'a',"ca_t"⟧,
+		⟦"c_at",'t',"_cat"⟧,
+		⟦"ca_t",'c',"c_at"⟧,
+		⟦"ca_t",'a',"_cat"⟧,
+		⟦"ca_t",'t',"cat_"⟧,
+		⟦"cat_",'c',"cat_"⟧,
+		⟦"cat_",'a',"cat_"⟧,
+		⟦"cat_",'t',"cat_"⟧⟧
+	return 	GDeterministicAutomaton(Q,Σ,q₀,F,δ)
+end

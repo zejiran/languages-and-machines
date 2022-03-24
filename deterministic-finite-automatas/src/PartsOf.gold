@@ -1,0 +1,58 @@
+
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+using gold.structures.set.*
+
+//
+//  recognizes strings of the form W$V where W ∈ ('a'‥ 'g')*,V ∈ ('a'‥ 'g')*
+//  and  no characters in W appear in V
+
+
+procedure main(args:String[]) begin
+	
+	A:= ('a'‥ 'g')
+	
+
+	
+	
+
+	
+	Q:= (℘(A)	× {0,1}) ∪ {"err"}
+	
+	// states (set,0) are used before you read $
+	// states (set,1) are used after you read $
+	Σ:= A ∪ {'$'}
+	q₀:= ⟨ Ø, 0 ⟩ // initially you have not read any symbols,nor $
+	F:=   ℘(A)	× {1} // once you've read $ you accept as long as you have not read $'
+	
+	M:=GDeterministicAutomaton(Q,Σ,q₀,F,d)
+	
+	// if you run the program  with GUI as an argument it will generate the viewing window
+	//  if not you can test it via the console
+	
+	if (args.length != 0  and args[0]="GUI") then
+		GAutomataFrame.show(M)
+	else
+		Utilities.test(M) // function found in utilities .
+	end
+end
+
+function d(q,x) begin // q=err
+  return q
+end
+
+function d(⟨S,q⟩, x) begin
+	if q=0 and x ≠ '$'  then return ⟨ S ∪ {x},q ⟩  
+				// if have not read $ then you just add what you read 
+				// notice S is a set so if you add an element that is already in the set you get the same set 
+				// also note that we are not  modifying S we are just changing states
+	elseif q=0 then  return ⟨ S, 1 ⟩  // q=0 and x=$ so we switch to the second part 
+	elseif q= 1  and  x∉S and  x ≠ '$'  then return ⟨S,q⟩ // in the second part we stay in the same state 
+													// as long as what we read is not in the set and we don't read x'
+	else return "err"  // q=1 ∧ (x∈'S ∨ x='$ )
+	end
+end

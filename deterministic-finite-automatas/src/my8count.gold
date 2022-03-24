@@ -1,0 +1,18 @@
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	
+	M:=GDeterministicAutomaton( (0‥7)×{0,1} , {'0','1'},⟨0,0⟩,{⟨0,0⟩},d)
+	GAutomataFrame.show(M)
+end
+
+function d(⟨x,y⟩,z) begin
+  if ⟨x,y⟩=⟨0,1⟩ then return ⟨0,1⟩
+  elseif x ≤ 6 then return ⟨x+1, (y+ (z-'0'))%2⟩
+  elseif (z-'0') =y then return ⟨0,0⟩ //x=7
+  else return ⟨0,1⟩
+  end
+end
