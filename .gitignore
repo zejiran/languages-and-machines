@@ -12,6 +12,9 @@
 .idea/
 .DS_Store
 
+gold-mac/eclipseGOLD_KEPLER/configuration/
+gold-mac/eclipseGOLD_KEPLER/p2/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
