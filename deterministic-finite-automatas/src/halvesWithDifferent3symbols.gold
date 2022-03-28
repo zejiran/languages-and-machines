@@ -1,0 +1,41 @@
+/**
+ * TP2.2.
+ *
+* The language of all strings over the alphabet 𝐴 = {𝑎, 𝑏, 𝑐, 𝑑, 𝑒} of the form
+* 𝜔$𝑋, where 𝜔 contains at least 3 different symbols of 𝐴 and 𝑋 is a string
+* composed with symbols of 𝐴 that did not appear in 𝜔.
+ *
+ * Author: Juan Alegría - 202011282
+ */
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	
+	M:=GDeterministicAutomaton( {0,1} ,('a'‥ 'b'),0,{0},d)
+	GAutomataFrame.show(M)
+end
+function d(q,x) begin
+  if x='a' then return  (q+1)% 2
+  	
+  	
+  else return q
+  	
+  	
+  end
+end
+
+		  ({⟨'a', 'b'⟩}×{'c', 'd', 'e'}) ∪ ({⟨'a', 'c'⟩}×{'b', 'd', 'e'}) ∪
+		  ({⟨'a', 'd'⟩}×{'b', 'c', 'e'}) ∪ ({⟨'a', 'e'⟩}×{'b', 'c', 'd'}) ∪
+		  
+		  ({⟨'b', 'a'⟩}×{'c', 'd', 'e'}) ∪ ({⟨'b', 'c'⟩}×{'a', 'd', 'e'}) ∪
+		  ({⟨'b', 'd'⟩}×{'a', 'c', 'e'}) ∪ ({⟨'b', 'e'⟩}×{'a', 'c', 'd'}) ∪
+		  
+		  ({⟨'c', 'a'⟩}×{'b', 'd', 'e'}) ∪ ({⟨'c', 'b'⟩}×{'a', 'd', 'e'}) ∪
+		  ({⟨'c', 'd'⟩}×{'a', 'b', 'e'}) ∪ ({⟨'c', 'e'⟩}×{'a', 'b', 'd'}) ∪
+		  
+		  ({⟨'d', 'a'⟩}×{'b', 'c', 'e'}) ∪ ({⟨'d', 'b'⟩}×{'a', 'c', 'e'}) ∪
+		  ({⟨'d', 'c'⟩}×{'a', 'b', 'e'}) ∪ ({⟨'d', 'e'⟩}×{'a', 'b', 'c'}) ∪
+		  
+		  ({⟨'e', 'a'⟩}×{'b', 'c', 'd'}) ∪ ({⟨'e', 'b'⟩}×{'a', 'c', 'd'}) ∪
+		  ({⟨'e', 'c'⟩}×{'a', 'b', 'd'}) ∪ ({⟨'e', 'd'⟩}×{'a', 'b', 'c'})
