@@ -66,18 +66,18 @@ public final class different3symbols {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=24;
+      $line=22;
       Object Q=$fix($opUnionY($opUnionY($opUnionY($opUnionY($opUnionY($opUnionY(GCollections.asSet('a','b','c','d','e'),$opCartsY(new Object[]{GCollections.asSet('a'),GCollections.asSet('b','c','d','e')})),$opCartsY(new Object[]{GCollections.asSet('b'),GCollections.asSet('a','c','d','e')})),$opCartsY(new Object[]{GCollections.asSet('c'),GCollections.asSet('a','b','d','e')})),$opCartsY(new Object[]{GCollections.asSet('d'),GCollections.asSet('a','b','c','e')})),$opCartsY(new Object[]{GCollections.asSet('e'),GCollections.asSet('a','b','c','d')})),GCollections.asSet('0','1')));
-      $line=33;
+      $line=29;
       Object \u03A3=$fix(GCollections.asSet('a','b','c','d','e'));
-      $line=34;
+      $line=30;
       Object q_0=$fix('0');
-      $line=35;
+      $line=31;
       Object F=$fix(GCollections.asSet('1'));
-      $line=36;
+      $line=32;
       $result=$invokeConstructor(GDeterministicAutomaton.class,new Object[]{Q,\u03A3,q_0,F,new GMethod(different3symbols.class,"d")});
       if (true) break $try;
-      $line=37;
+      $line=33;
       $rethrow(new RuntimeException("The function \"createAutomaton()\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -89,100 +89,100 @@ public final class different3symbols {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=40;
+      $line=36;
       if ($opEqualY(x,'0')) {
-        $line=41;
+        $line=37;
         if ((((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'c'))||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-          $line=41;
+          $line=37;
           $result=z;
           if (true) break $try;
         }
         else {
-          $line=42;
+          $line=38;
           if ($opEqualY(z,'0')) {
-            $line=42;
+            $line=38;
             $result=z;
             if (true) break $try;
           }
         }
       }
       else {
-        $line=45;
+        $line=41;
         if ($opEqualY(x,'a')) {
-          $line=46;
+          $line=42;
           if (((($opEqualY(z,'b')||$opEqualY(z,'c'))||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-            $line=46;
+            $line=42;
             $result=GCollections.asList(x,z);
             if (true) break $try;
           }
           else {
-            $line=47;
+            $line=43;
             $result=x;
             if (true) break $try;
           }
         }
         else {
-          $line=49;
+          $line=45;
           if ($opEqualY(x,'b')) {
-            $line=50;
+            $line=46;
             if (((($opEqualY(z,'a')||$opEqualY(z,'c'))||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-              $line=50;
+              $line=46;
               $result=GCollections.asList(x,z);
               if (true) break $try;
             }
             else {
-              $line=51;
+              $line=47;
               $result=x;
               if (true) break $try;
             }
           }
           else {
-            $line=53;
+            $line=49;
             if ($opEqualY(x,'c')) {
-              $line=54;
+              $line=50;
               if (((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-                $line=54;
+                $line=50;
                 $result=GCollections.asList(x,z);
                 if (true) break $try;
               }
               else {
-                $line=55;
+                $line=51;
                 $result=x;
                 if (true) break $try;
               }
             }
             else {
-              $line=57;
+              $line=53;
               if ($opEqualY(x,'d')) {
-                $line=58;
+                $line=54;
                 if (((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'c'))||$opEqualY(z,'e'))) {
-                  $line=58;
+                  $line=54;
                   $result=GCollections.asList(x,z);
                   if (true) break $try;
                 }
                 else {
-                  $line=59;
+                  $line=55;
                   $result=x;
                   if (true) break $try;
                 }
               }
               else {
-                $line=61;
+                $line=57;
                 if ($opEqualY(x,'e')) {
-                  $line=62;
+                  $line=58;
                   if (((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'c'))||$opEqualY(z,'d'))) {
-                    $line=62;
+                    $line=58;
                     $result=GCollections.asList(x,z);
                     if (true) break $try;
                   }
                   else {
-                    $line=63;
+                    $line=59;
                     $result=x;
                     if (true) break $try;
                   }
                 }
                 else {
-                  $line=66;
+                  $line=62;
                   $result='1';
                   if (true) break $try;
                 }
@@ -191,7 +191,7 @@ public final class different3symbols {
           }
         }
       }
-      $line=68;
+      $line=64;
       $rethrow(new RuntimeException("The function \"d(x:Object,z:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -206,63 +206,63 @@ public final class different3symbols {
       java.util.Iterator $v2=GCollections.unmodifiableCollection($v1).iterator();
       Object x=$v2.next();
       Object y=$v2.next();
-      $line=71;
+      $line=67;
       if ($opEqualY(x,'a')) {
-        $line=72;
+        $line=68;
         if ($opEqualY(y,'b')) {
-          $line=73;
+          $line=69;
           if ((($opEqualY(z,'c')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
+            $line=69;
+            $result='1';
+            if (true) break $try;
+          }
+          else {
+            $line=70;
+            $result=GCollections.asList(x,y);
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=72;
+          if ($opEqualY(y,'c')) {
             $line=73;
-            $result='1';
-            if (true) break $try;
-          }
-          else {
-            $line=74;
-            $result=GCollections.asList(x,y);
-            if (true) break $try;
-          }
-        }
-        else {
-          $line=76;
-          if ($opEqualY(y,'c')) {
-            $line=77;
             if ((($opEqualY(z,'b')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
+              $line=73;
+              $result='1';
+              if (true) break $try;
+            }
+            else {
+              $line=74;
+              $result=GCollections.asList(x,y);
+              if (true) break $try;
+            }
+          }
+          else {
+            $line=76;
+            if ($opEqualY(y,'d')) {
               $line=77;
-              $result='1';
-              if (true) break $try;
-            }
-            else {
-              $line=78;
-              $result=GCollections.asList(x,y);
-              if (true) break $try;
-            }
-          }
-          else {
-            $line=80;
-            if ($opEqualY(y,'d')) {
-              $line=81;
               if ((($opEqualY(z,'b')||$opEqualY(z,'c'))||$opEqualY(z,'e'))) {
+                $line=77;
+                $result='1';
+                if (true) break $try;
+              }
+              else {
+                $line=78;
+                $result=GCollections.asList(x,y);
+                if (true) break $try;
+              }
+            }
+            else {
+              $line=80;
+              if ($opEqualY(y,'e')) {
                 $line=81;
-                $result='1';
-                if (true) break $try;
-              }
-              else {
-                $line=82;
-                $result=GCollections.asList(x,y);
-                if (true) break $try;
-              }
-            }
-            else {
-              $line=84;
-              if ($opEqualY(y,'e')) {
-                $line=85;
                 if ((($opEqualY(z,'b')||$opEqualY(z,'c'))||$opEqualY(z,'d'))) {
-                  $line=85;
+                  $line=81;
                   $result='1';
                   if (true) break $try;
                 }
                 else {
-                  $line=86;
+                  $line=82;
                   $result=GCollections.asList(x,y);
                   if (true) break $try;
                 }
@@ -271,63 +271,63 @@ public final class different3symbols {
           }
         }
       }
-      $line=90;
+      $line=86;
       if ($opEqualY(x,'b')) {
-        $line=91;
+        $line=87;
         if ($opEqualY(y,'a')) {
-          $line=92;
+          $line=88;
           if ((($opEqualY(z,'c')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-            $line=92;
+            $line=88;
             $result='1';
             if (true) break $try;
           }
           else {
-            $line=93;
+            $line=89;
             $result=GCollections.asList(x,y);
             if (true) break $try;
           }
         }
         else {
-          $line=95;
+          $line=91;
           if ($opEqualY(y,'c')) {
-            $line=96;
+            $line=92;
             if ((($opEqualY(z,'a')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
+              $line=92;
+              $result='1';
+              if (true) break $try;
+            }
+            else {
+              $line=93;
+              $result=GCollections.asList(x,y);
+              if (true) break $try;
+            }
+          }
+          else {
+            $line=95;
+            if ($opEqualY(y,'d')) {
               $line=96;
-              $result='1';
-              if (true) break $try;
-            }
-            else {
-              $line=97;
-              $result=GCollections.asList(x,y);
-              if (true) break $try;
-            }
-          }
-          else {
-            $line=99;
-            if ($opEqualY(y,'d')) {
-              $line=100;
               if ((($opEqualY(z,'a')||$opEqualY(z,'c'))||$opEqualY(z,'e'))) {
+                $line=96;
+                $result='1';
+                if (true) break $try;
+              }
+              else {
+                $line=97;
+                $result=GCollections.asList(x,y);
+                if (true) break $try;
+              }
+            }
+            else {
+              $line=99;
+              if ($opEqualY(y,'e')) {
                 $line=100;
-                $result='1';
-                if (true) break $try;
-              }
-              else {
-                $line=101;
-                $result=GCollections.asList(x,y);
-                if (true) break $try;
-              }
-            }
-            else {
-              $line=103;
-              if ($opEqualY(y,'e')) {
-                $line=104;
                 if ((($opEqualY(z,'a')||$opEqualY(z,'c'))||$opEqualY(z,'d'))) {
-                  $line=104;
+                  $line=100;
                   $result='1';
                   if (true) break $try;
                 }
                 else {
-                  $line=105;
+                  $line=101;
                   $result=GCollections.asList(x,y);
                   if (true) break $try;
                 }
@@ -336,63 +336,63 @@ public final class different3symbols {
           }
         }
       }
-      $line=109;
+      $line=105;
       if ($opEqualY(x,'c')) {
-        $line=110;
+        $line=106;
         if ($opEqualY(y,'a')) {
-          $line=111;
+          $line=107;
           if ((($opEqualY(z,'b')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
+            $line=107;
+            $result='1';
+            if (true) break $try;
+          }
+          else {
+            $line=108;
+            $result=GCollections.asList(x,y);
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=110;
+          if ($opEqualY(y,'b')) {
             $line=111;
-            $result='1';
-            if (true) break $try;
-          }
-          else {
-            $line=112;
-            $result=GCollections.asList(x,y);
-            if (true) break $try;
-          }
-        }
-        else {
-          $line=114;
-          if ($opEqualY(y,'b')) {
-            $line=115;
             if ((($opEqualY(z,'a')||$opEqualY(z,'d'))||$opEqualY(z,'e'))) {
-              $line=115;
+              $line=111;
               $result='1';
               if (true) break $try;
             }
             else {
-              $line=116;
+              $line=112;
               $result=GCollections.asList(x,y);
               if (true) break $try;
             }
           }
           else {
-            $line=118;
+            $line=114;
             if ($opEqualY(y,'d')) {
-              $line=119;
+              $line=115;
               if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'e'))) {
+                $line=115;
+                $result='1';
+                if (true) break $try;
+              }
+              else {
+                $line=116;
+                $result=GCollections.asList(x,y);
+                if (true) break $try;
+              }
+            }
+            else {
+              $line=118;
+              if ($opEqualY(y,'e')) {
                 $line=119;
-                $result='1';
-                if (true) break $try;
-              }
-              else {
-                $line=120;
-                $result=GCollections.asList(x,y);
-                if (true) break $try;
-              }
-            }
-            else {
-              $line=122;
-              if ($opEqualY(y,'e')) {
-                $line=123;
                 if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'d'))) {
-                  $line=123;
+                  $line=119;
                   $result='1';
                   if (true) break $try;
                 }
                 else {
-                  $line=124;
+                  $line=120;
                   $result=GCollections.asList(x,y);
                   if (true) break $try;
                 }
@@ -401,63 +401,63 @@ public final class different3symbols {
           }
         }
       }
-      $line=128;
+      $line=124;
       if ($opEqualY(x,'d')) {
-        $line=129;
+        $line=125;
         if ($opEqualY(y,'a')) {
-          $line=130;
+          $line=126;
           if ((($opEqualY(z,'b')||$opEqualY(z,'c'))||$opEqualY(z,'e'))) {
+            $line=126;
+            $result='1';
+            if (true) break $try;
+          }
+          else {
+            $line=127;
+            $result=GCollections.asList(x,y);
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=129;
+          if ($opEqualY(y,'b')) {
             $line=130;
-            $result='1';
-            if (true) break $try;
-          }
-          else {
-            $line=131;
-            $result=GCollections.asList(x,y);
-            if (true) break $try;
-          }
-        }
-        else {
-          $line=133;
-          if ($opEqualY(y,'b')) {
-            $line=134;
             if ((($opEqualY(z,'a')||$opEqualY(z,'c'))||$opEqualY(z,'e'))) {
-              $line=134;
+              $line=130;
               $result='1';
               if (true) break $try;
             }
             else {
-              $line=135;
+              $line=131;
               $result=GCollections.asList(x,y);
               if (true) break $try;
             }
           }
           else {
-            $line=137;
+            $line=133;
             if ($opEqualY(y,'c')) {
-              $line=138;
+              $line=134;
               if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'e'))) {
-                $line=138;
+                $line=134;
                 $result='1';
                 if (true) break $try;
               }
               else {
-                $line=139;
+                $line=135;
                 $result=GCollections.asList(x,y);
                 if (true) break $try;
               }
             }
             else {
-              $line=141;
+              $line=137;
               if ($opEqualY(y,'e')) {
-                $line=142;
+                $line=138;
                 if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'c'))) {
-                  $line=142;
+                  $line=138;
                   $result='1';
                   if (true) break $try;
                 }
                 else {
-                  $line=143;
+                  $line=139;
                   $result=GCollections.asList(x,y);
                   if (true) break $try;
                 }
@@ -466,63 +466,63 @@ public final class different3symbols {
           }
         }
       }
-      $line=147;
+      $line=143;
       if ($opEqualY(x,'e')) {
-        $line=148;
+        $line=144;
         if ($opEqualY(y,'a')) {
-          $line=149;
+          $line=145;
           if ((($opEqualY(z,'b')||$opEqualY(z,'c'))||$opEqualY(z,'d'))) {
-            $line=149;
+            $line=145;
             $result='1';
             if (true) break $try;
           }
           else {
-            $line=150;
+            $line=146;
             $result=GCollections.asList(x,y);
             if (true) break $try;
           }
         }
         else {
-          $line=152;
+          $line=148;
           if ($opEqualY(y,'b')) {
-            $line=153;
+            $line=149;
             if ((($opEqualY(z,'a')||$opEqualY(z,'c'))||$opEqualY(z,'d'))) {
-              $line=153;
+              $line=149;
               $result='1';
               if (true) break $try;
             }
             else {
-              $line=154;
+              $line=150;
               $result=GCollections.asList(x,y);
               if (true) break $try;
             }
           }
           else {
-            $line=156;
+            $line=152;
             if ($opEqualY(y,'c')) {
-              $line=157;
+              $line=153;
               if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'d'))) {
-                $line=157;
+                $line=153;
                 $result='1';
                 if (true) break $try;
               }
               else {
-                $line=158;
+                $line=154;
                 $result=GCollections.asList(x,y);
                 if (true) break $try;
               }
             }
             else {
-              $line=160;
+              $line=156;
               if ($opEqualY(y,'d')) {
-                $line=161;
+                $line=157;
                 if ((($opEqualY(z,'a')||$opEqualY(z,'b'))||$opEqualY(z,'c'))) {
-                  $line=161;
+                  $line=157;
                   $result='1';
                   if (true) break $try;
                 }
                 else {
-                  $line=162;
+                  $line=158;
                   $result=GCollections.asList(x,y);
                   if (true) break $try;
                 }
@@ -531,7 +531,7 @@ public final class different3symbols {
           }
         }
       }
-      $line=166;
+      $line=162;
       $rethrow(new RuntimeException("The function \"d(\u27E8x,y\u27E9:java.lang.Iterable,z:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {

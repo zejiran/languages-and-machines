@@ -16,19 +16,15 @@ using gold.structures.set.*
 procedure main(args:String[]) begin
 	GAutomataFrame.show(createAutomaton())
 	Utilities.test(createAutomaton())
-
-
 end
 
 function createAutomaton():IAutomaton begin
 	Q := {'a', 'b', 'c', 'd', 'e'} ∪ 
-	
 		  {'a'}×{'b', 'c', 'd', 'e'} ∪
 		  {'b'}×{'a', 'c', 'd', 'e'} ∪
 		  {'c'}×{'a', 'b', 'd', 'e'} ∪
 		  {'d'}×{'a', 'b', 'c', 'e'} ∪
 		  {'e'}×{'a', 'b', 'c', 'd'} ∪
-		  
 		  {'0', '1'}
 	Σ := {'a', 'b', 'c', 'd', 'e'}
 	q₀ := '0'
