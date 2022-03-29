@@ -29,10 +29,10 @@ function createAutomaton():IAutomaton begin
 	Σ := {'a', 'b', 'c', 'd', 'e'}
 	q₀ := '0'
 	F := {'1'}
-	return GDeterministicAutomaton(Q,Σ,q₀,F,d)
+	return GDeterministicAutomaton(Q, Σ, q₀, F, d)
 end
 
-function d(x,z) begin
+function d(x, z) begin
 	if x = '0' then
 		if z = 'a' or z = 'b' or z = 'c' or z = 'd' or z = 'e' then return z
 		elseif z = '0' then return z
@@ -63,99 +63,99 @@ function d(x,z) begin
 	end
 end
 
-function d(⟨x,y⟩,z) begin
+function d(⟨x, y⟩, z) begin
 	if x = 'a' then
 		if y = 'b' then 
 			if z = 'c' or z = 'd' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'c' then 
 			if z = 'b' or z = 'd' or z= 'e' then return '1'
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'd' then 
 			if z = 'b' or z = 'c' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'e' then 
 			if z = 'b' or z = 'c' or z= 'd' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		end
 	end
 	if x = 'b' then
 		if y = 'a' then 
 			if z = 'c' or z = 'd' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'c' then 
 			if z = 'a' or z = 'd' or z= 'e' then return '1'
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'd' then 
 			if z = 'a' or z = 'c' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'e' then 
 			if z = 'a' or z = 'c' or z= 'd' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		end
 	end
 	if x = 'c' then
 		if y = 'a' then 
 			if z = 'b' or z = 'd' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'b' then 
 			if z = 'a' or z = 'd' or z= 'e' then return '1'
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'd' then 
 			if z = 'a' or z = 'b' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'e' then 
 			if z = 'a' or z = 'b' or z= 'd' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		end
 	end
 	if x = 'd' then
 		if y = 'a' then 
 			if z = 'b' or z = 'c' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'b' then 
 			if z = 'a' or z = 'c' or z= 'e' then return '1'
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'c' then 
 			if z = 'a' or z = 'b' or z= 'e' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'e' then 
 			if z = 'a' or z = 'b' or z= 'c' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		end
 	end
 	if x = 'e' then
 		if y = 'a' then 
 			if z = 'b' or z = 'c' or z= 'd' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'b' then 
 			if z = 'a' or z = 'c' or z= 'd' then return '1'
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'c' then 
 			if z = 'a' or z = 'b' or z= 'd' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		elseif y = 'd' then 
 			if z = 'a' or z = 'b' or z= 'c' then return '1' 
-			else return ⟨x,y⟩
+			else return ⟨x, y⟩
 			end
 		end
 	end

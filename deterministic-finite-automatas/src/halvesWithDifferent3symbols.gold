@@ -34,7 +34,7 @@ function createAutomaton():IAutomaton begin
 	Σ := {'a', 'b', 'c', 'd', 'e', '$'}
 	q₀ := '0'
 	F := {⟨'1', '1', '1'⟩}
-	return GDeterministicAutomaton(Q,Σ,q₀,F,d)
+	return GDeterministicAutomaton(Q, Σ, q₀, F, d)
 end
 
 function d(x, z) begin
