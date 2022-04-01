@@ -1,0 +1,63 @@
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+using gold.structures.map.*
+
+procedure main ( args : String [ ] ) begin
+	m = createTransducer ( ) 
+	//GAutomataFrame.show ( m ) 
+	Utilities.test( m, "$", true )
+end
+
+
+function createTransducer ( ) : ITransducer begin
+
+	Q := { 0 , 1 , 2 , 3 , "f" , "I" , "e" } ∪ ( { "R" } × { 0 , 1 , 2 , 3 } )
+
+	Σ := ( '0' ‥ '9' ) ∪ { '$','R' }
+	Out := ( '0' ‥ '9' ) ∪ { '$' }
+
+	q₀ := "I"
+	F := { "f" }
+	return GDeterministicTransducer ( Q , Σ , Out , q₀ , F , δ , g , h )
+end
+
+function δ ( q , s ) begin
+	d := s - '0'
+	if q ∈ { "f" , "e" } then
+		return "e"
+	elseif q = "I" and s ∈ ( '0' ‥ '3' ) then
+		return ⟨ "R" , d ⟩
+	elseif q = "I" then
+		return "e"
+	elseif q ∈ ( 0 ‥ 3 ) and s = '$' then
+		return "f"
+	elseif q ∈ ( 0 ‥ 3 ) and s ∈ ( '0' ‥ '9' ) then
+		return ( 4 * d + q ) ÷ 10
+	else
+		return "e"
+	end
+end
+
+function δ ( ⟨ r , s ⟩ , x) begin
+	if  x='R' then return s
+	else return "e"
+	end
+end
+
+function h ( q , s ) begin
+	d := s - '0'
+	if q ∈ (0‥4) and s ∈ ( '0' ‥ '9' ) then
+		return ( 4 * d + q ) mod 10
+	elseif q ∈ (0‥4) and s = '$' then
+		return q = 0 ? λ : ( q )
+	else
+		return λ
+	end
+end
+
+
+
+function g ( q ) begin
+	return λ
+end

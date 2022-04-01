@@ -1,0 +1,54 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+using gold.structures.map.*
+
+
+procedure main(args:String[]) begin
+    m = createTransducer()
+   // GAutomataFrame.show(m)
+	 Utilities.test(m)
+end
+  
+        
+
+
+ 
+
+
+
+ 
+function createTransducer():ITransducer begin
+	
+
+   Q:= {0,1,2,3,"f"}  
+	
+	Σ:=('0'‥'9') ∪ {'$'}  
+	Out :=	('0'‥'9') ∪ {'R'}
+	 
+	q₀:=0
+	F:= {"f"}
+	return 	GDeterministicTransducer(Q,Σ,Out,q₀,F,δ,g,h)
+end
+
+function δ(q,s) begin
+   		d:= s-'0'
+   		if q="f" or s='$' then return "f"
+   		else return  (10*q + d)%4
+ 		end 
+end
+
+
+function h(q,s) begin
+    d:= s-'0'
+    if q="f" then return λ
+   	 elseif s='$' then return ("R"+q)
+    else return (10*q + d)÷4 
+end 
+end
+
+  
+
+function g(q) begin
+	 return λ
+		
+end

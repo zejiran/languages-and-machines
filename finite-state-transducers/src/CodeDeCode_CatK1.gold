@@ -1,0 +1,29 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//  Coder - Decoder
+//   Coder: 
+//	
+// -----------------------
+
+
+using gold.**
+  
+         
+     
+
+
+procedure main(args:String[]) begin
+	var sc:java.util.Scanner(System.$in)
+   
+   coder:=ReplaceCat_GOLD.createAutomaton()
+   
+   deCoder:=ReplaceK_GOLD.createAutomaton()
+    
+    
+ 	
+  Utilities.testCodeDecode (coder, deCoder)
+		
+end
+
+

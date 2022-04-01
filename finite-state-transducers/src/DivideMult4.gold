@@ -1,0 +1,34 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//  Coder - Decoder
+//   Coder:  Div4
+//  Decoder: Mult4
+//  enter the number to be divided without the final $. testCodeDecodeRevAddDS   will  add this symbol before  testing the automaton.
+//	testCodeDecodeRevAddDS   will also send the reverse of the output of the first automaton to the decoder
+// -----------------------
+
+
+using gold.**
+  
+         
+     
+
+
+procedure main(args:String[]) begin
+	var sc:java.util.Scanner(System.$in)
+   
+   coder:=Div4.createTransducer()
+   
+   deCoder:=Mult4.createTransducer()
+    
+    
+  //GAutomataFrame.show(coder)
+  //GAutomataFrame.show(deCoder)
+   
+ 	
+  Utilities.testCodeDecodeRevAddDS (coder, deCoder)
+		
+end
+
+
