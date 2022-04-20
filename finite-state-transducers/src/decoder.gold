@@ -1,0 +1,67 @@
+/**
+ * TP3.2.
+ *
+ * An automaton with responses receiving a string over {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '#'}
+ * which decodes it based on a set of specific rules.
+ * 
+ * Author: Juan Alegría - 202011282
+ */
+ 
+using gold.**
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+	Utilities.test(createAutomaton())
+end
+
+function getName() begin
+	return "decoder"
+end
+
+function createAutomaton():IAutomaton begin
+	Σ := { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#' }
+	O := ('0'‥'9')
+	
+	Q := (1‥9)×(0‥9) ∪ {0}
+	q₀ := 0
+	F := (1‥9)×(0‥9) ∪ {0}
+	
+	return GDeterministicTransducer(Q,Σ,O,q₀,F,δ,g,h)
+end
+
+function g(q) begin
+	return λ
+end
+
+function δ(d, s) begin
+	if s = '#' then return d
+	else
+		s = Integer.parseInt(s)
+		if s = 0 then return 0 end
+		if d = 0 then return ⟨s, 1⟩ end
+	end
+end
+
+function δ(⟨d,i⟩,s) begin
+	if s = '#' then return ⟨d, (i+1) % d⟩
+	else
+		s = Integer.parseInt(s)
+		if d = 0 then return ⟨s, i+1⟩ // Init d
+		else return ⟨d, (i+1) % d⟩ end
+	end
+end
+
+function h(d,s) begin
+	if s = '#' then return d end
+	if d = 0 then return s
+	end
+end
+
+function h(⟨d,i⟩,s) begin
+	if s = '#' then return d 
+	else
+		s = Integer.parseInt(s)
+		if i % d = 1 then return Integer.toString((s-d) % 10)
+		else return Integer.toString(s)
+		end
+	end
+end
