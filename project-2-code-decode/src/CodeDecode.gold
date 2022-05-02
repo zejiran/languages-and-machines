@@ -1,0 +1,202 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+// Codes and decodes
+// Reads a string  of the form dσ:ω
+// where   d in {2,3,5}
+//  s  in {a,‥,z}
+//  W in {a,‥z}*
+//   outputs dσ:ω'   ω':  if σ appears in positions p such that p%d = 0 then it is replaced by #
+//    symbols that appear in positions such that p%d =1 are replaced by the symbol shifted  d  positions
+//      for instance if the symbol is a and d  is 2 then the answer would be c do
+//  ω=σ1‥.σn
+// ω' =ρ1‥rρ
+//   ρi = # if   σi =s and  (i%d) = 0
+//   ρi =  shift( σi, d) if  (i%d) = 1
+//   ρi =   σi  otherwise
+
+/**
+ * Project 2
+ * 
+ * Author: Juan Alegría - 202011282
+ * 
+ * Codes and decodes
+ *
+ * The coder reads strings of the form σα:ω$ where:
+ * σ ∈ ('a'‥'z')
+ * α ∈ ('a'‥'z')
+ *  ω = σ_1‥.σ_n, with σ_i ∈ ('a'‥'z')
+ * 
+ * The coder should output: σα:βd, where β = ρ1 . . . ρn.
+• Each ρi
+is coded as follows:
+– if σi = σ then ρi = α
+– if σi = α then ρi = σ
+– if σi 6∈ {σ, α}
+∗ if σi = σi−1 then ρi = #
+∗ if σi 6= σi−1 and (i%3) = 1 then ρi
+is the uppercase of the letter after
+σi (i.e., if σi = a, ρi = B; if σi = b, ρi = C, . . . if σi = z, ρi = A )
+∗ if σi 6= σi−1 and (i%3) = 2 then ρi
+is the upper case of σi
+– if none of the conditions apply, then ρi = σi
+• d is the number of replacements (σ for α and α for σ) that were made modulo
+5
+ * 
+ */
+ 
+ 
+
+
+using gold.**
+  
+  
+var A
+var B
+
+procedure main(args:String[]) begin
+	var sc:java.util.Scanner(System.$in)
+	
+	A = ('a'‥'z')
+	B = ('0'‥'9')
+	coder:=createCoder()
+   	deCoder:=createDecoder()
+   	
+   	// GAutomataFrame.show(coder)
+   	// GAutomataFrame.show(deCoder)
+
+  	Utilities.testCodeDecode(coder,deCoder)		
+end
+
+
+
+
+
+function createCoder():ITransducer begin
+	
+	
+	Q:= {⟨d,s,pos⟩ | d in {3,2,5}, s in ('a'‥'z'),0 <= pos < 5  }  ∪ {3,2,5,"I","E"} ∪ {3,2,5}× ('a'‥'z')
+	
+	Σ :=('a'‥'z')∪{ ':', '2', '3', '5'}
+	Σ´:=Σ∪{ '#'}
+	q₀:= "I"
+	F:=	 {⟨d,s,pos⟩ | d in {3,2,5}, s in ('a'‥'z'),0 <= pos < 5  }
+
+	return 	GDeterministicTransducer(Q,Σ,Σ´,q₀,F,δ,g,h)
+end
+
+	
+	
+	
+function δ(state,input) begin
+   
+   	if state="I" and input in { '2', '3', '5'}  then return input - '0'
+ 	elseif state in {2,3,5} and input in ('a'‥'z') then return ⟨state, input⟩
+  	elseif state in {2,3,5,"I","E"} then return "E"
+ 	elseif |state| = 2  and input = ':'   then return ⟨state[0], state[1], 1⟩
+  	elseif |state| = 3 and input in ('a'‥'z') then 
+  		d,s,pos:=state[0], state[1], state[2]
+  		return ⟨d,s,(pos+1)%d⟩
+  	else return "E"
+   	end
+
+end
+
+
+
+	
+function h(state,input) begin
+   
+ 
+   	if state="I" and input in { '2', '3', '5'}  then return input
+ 	elseif state in {2,3,5} and input in ('a'‥'z') then return input
+  	elseif state in {2,3,5,"I","E"} then return λ
+ 	elseif |state| = 2  and input = ':'   then return ":"
+  	elseif |state| = 3 and input in ('a'‥'z') then 
+  	 	d,s,pos:=state[0], state[1], state[2]
+   		if 0 = pos and input =s  then return "#"
+   		elseif pos=1 then return shiftSymbol(input,d)
+   		else return input
+   	end
+   else return λ
+end
+
+end
+
+
+
+
+
+function g(s) begin
+	return λ
+end
+
+function createDecoder():ITransducer begin
+	Q:= {⟨d,s,pos⟩ | d in {3,2,5}, s in ('a'‥'z'),pos in (0‥4)∪{"_"}  }  ∪ {3,2,5,"I","E"} 
+	Σ´ :=('a'‥'z')∪{ ':', '2', '3', '5'}
+	Σ:=Σ´∪{ '#'}
+	q₀:= "I"
+	F:=	 {⟨d,s,pos⟩ | d in {3,2,5}, s in ('a'‥'z'),0 <= pos < 5  }
+
+	return 	GDeterministicTransducer(Q,Σ,Σ´,q₀,F,δ1,g,h1)
+end
+
+	
+	
+	
+function δ1(state,input) begin
+  if state="I" and input in { '2', '3', '5'}  then return input - '0'
+  elseif state in {2,3,5} and input in ('a'‥'z') then return ⟨state, input,"_"⟩
+  else return "E"
+  end
+end
+// ------
+function δ1(⟨d,s,pos⟩,input) begin
+  if pos="_" and input = ':' then return ⟨d,s,1⟩
+  elseif pos="_"  then return "E"
+  elseif input = '#' and pos!=0 then return "E"
+  elseif input = s and pos =0 then return "E"
+  elseif input in ('a'‥'z')∪{'#'} then return ⟨d,s,(pos+1)%d⟩
+  else return "E"
+  end
+end
+
+
+
+	
+function h1(state,input) begin 
+  if state="I" and input in { '2', '3', '5'}  then return input-'0' 
+  elseif state in {2,3,5} and input in ('a'‥'z') then return input
+  else return λ
+  end
+end
+
+function h1(⟨d,s,pos⟩,input) begin
+ 	if pos="_" and input = ':' then return input
+    elseif input = '#' and pos=0 then return s
+ 	elseif input in ('a'‥'z') and pos=1 then return shiftSymbol(input,-d)
+ 	elseif input in ('a'‥'z')  then return input
+   	else return λ
+  	end
+end
+
+
+
+
+
+
+ function shiftSymbol(symbol, shift) begin
+	var  r : Character
+   
+  	if symbol in ('a'‥'z') then
+	r:= 'a' + (symbol -'a'+ shift)% 26
+	elseif symbol in ('A'‥'Z') then
+	r:= 'A' + (symbol -'A'+ shift)% 26
+	elseif  symbol in ('0'‥'9') then
+	r:= '0' + (symbol -'0'+ shift)% 10
+	else r:= r
+	end		
+	return r
+end
+
+
