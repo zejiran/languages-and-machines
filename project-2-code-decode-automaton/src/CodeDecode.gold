@@ -32,13 +32,13 @@ using gold.**
 procedure main(args:String[]) begin
 	var sc:java.util.Scanner(System.$in)
 	
-	coder:=createCoder()
-   	//deCoder:=createDecoder()
+	coder := createCoder()
+   	deCoder := createDecoder()
    	
-   	//GAutomataFrame.show(coder)
+   	// GAutomataFrame.show(coder)
    	// GAutomataFrame.show(deCoder)
-	Utilities.test(coder)
-  	//Utilities.testCodeDecode(coder,deCoder)		
+
+  	Utilities.testCodeDecode(coder,deCoder)		
 end
 
 function g(s) begin
@@ -47,7 +47,11 @@ end
 
 function shiftSymbol(symbol, shift) begin
 	var  r: Character
-	r := 'A' + (symbol - 'a' + shift) % 26
+	if symbol in ('a'‥'z') then
+		r := 'A' + (symbol - 'a' + shift) % 26
+	else
+		r := 'a' + (symbol - 'A' + shift) % 26
+	end
 	return r
 end
 
@@ -130,36 +134,108 @@ function h(⟨first, second, half, pos, d, last⟩, input) begin
 end
 
 // Decoder
-⧐function createDecoder():ITransducer begin
-⧐	Q := {⟨first, second, half, pos, d, last⟩ | 
-⧐					first in {0} ∪ ('a'‥'z'),
-⧐					second in {0} ∪ ('a'‥'z'),
-⧐					half in {0, 1},
-⧐					0 <= pos < 3,
-⧐					0 <= d < 5,
-⧐					last in {0} ∪ ('a'‥'z')
-⧐		 } ∪ {'E'}
-⧐	
-⧐	Σ := ('a'‥'z') ∪ {':', '$'}
-⧐	Σ´ := Σ ∪ ('A'‥'Z') ∪ {'#'} ∪ (0‥5)
-⧐	q₀ := ⟨0, 0, 0, 0, 0, 0⟩
-⧐	F := {'E'}
-⧐
-⧐	return GDeterministicTransducer(Q,Σ,Σ´,q₀,F,δ1,g,h1)
-⧐end
-⧐	
-⧐function δ1(state,input) begin
-⧐
-⧐end
-⧐
-⧐function δ1(⟨d,s,pos⟩,input) begin
-⧐
-⧐end
-⧐
-⧐function h1(state,input) begin 
-⧐
-⧐end
-⧐
-⧐function h1(⟨d,s,pos⟩,input) begin
-⧐
-⧐end
+function createDecoder():ITransducer begin
+	Q1 := {⟨first, second, half, pos, d, last⟩ | 
+					first in {0} ∪ ('a'‥'z'),
+					second in {0} ∪ ('a'‥'z'),
+					half in {0, 1},
+					0 <= pos < 3,
+					0 <= d < 5,
+					last in {0} ∪ ('a'‥'z') ∪ {'$'}
+		 } ∪ {'E', "Err"}
+
+	Σ´ := ('a'‥'z') ∪ {':', '$'}
+	Σ := ('a'‥'z') ∪ ('A'‥'Z') ∪ {'#', ':'} ∪ ('0'‥'5')
+	q₀ := ⟨0, 0, 0, 0, 0, 0⟩
+	F := {'E'}
+
+	return GDeterministicTransducer(Q1,Σ,Σ´,q₀,F,δ1,g,h1)
+end
+	
+function δ1(state, input) begin
+	return "Err"
+end
+
+function δ1(⟨first, second, half, pos, d, last⟩, input) begin
+	if input in ('0'‥'5') then
+		return 'E'
+	elseif input == ':' then
+		if half == 0 then
+			return ⟨first, second, 1, pos, d, last⟩ 
+		else return "Err"
+		end
+	else
+		if half == 1 then
+			if input == first or input == second then
+				return ⟨first, second, half, 
+							(pos+1)%3,
+							(d+1)%5,
+							h1(⟨first, second, half, pos, d, last⟩, input)
+						 ⟩
+			else
+				return ⟨first, second, half, 
+							(pos+1)%3,
+							d, h1(⟨first, second, half, pos, d, last⟩, input)
+						 ⟩
+			end
+		else
+			if first == 0 and input in ('a'‥'z') then 
+				return ⟨input, second, half, pos, d, last⟩
+			elseif second == 0 and input in ('a'‥'z') then 
+				return ⟨first, input, half, pos, d, last⟩
+			elseif input == '#' then
+				return "Err"
+			else
+				return "Err"
+			end
+		end
+	end
+	return "Err"
+end
+
+function h1(state, input) begin
+	return λ
+end
+
+function h1(⟨first, second, half, pos, d, last⟩, input) begin
+	if input in ('a'‥'z') and (first == 0 or second == 0) then
+		return input
+	end
+	if input in ('0'‥'5') or first == 0 or second == 0 then
+		return '$'
+	end
+	if input == '#' and last == 0 then
+		return '$'
+	end
+	if input in ('A'‥'Z') then
+		if half == 1 then
+			if (pos+1)%3 == 1 then
+				return shiftSymbol(input, 25)
+			else
+				return shiftSymbol(input, 0)
+			end
+		else
+			return λ
+		end
+	end
+	if input == '#' then
+		return last
+	elseif input == ':' then
+		if half == 0 then return input
+		else return λ
+		end
+	else
+		if half == 1 then
+			if input == first then
+				return second
+			elseif input == second then
+				return first
+			else
+				if input == '#' then
+					return last
+				end
+			end
+		end
+	end
+	return input
+end

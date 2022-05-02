@@ -1,6 +1,3 @@
-
-
-
 using gold.**
 
 toSet(C) :=  {x|  x in C}
@@ -11,10 +8,6 @@ reverse(s:String):=  StringBuilder(s).reverse().toString()
 procedure testBlock(M:IAutomaton, testCases) begin
 	var sc:java.util.Scanner(System.$in)
 	isTransducer:=ITransducer.class.isInstance(M)
-	
-	
-	
-	
 	
 	for each ⟨s,r⟩ in testCases  do
 		result:=M.acceptsString(s)
@@ -71,10 +64,6 @@ end
 end
 
 
-
-
-
-
 procedure test(M:IAutomaton) begin
 	var sc:java.util.Scanner(System.$in)
 	isTransducer:=ITransducer.class.isInstance(M)
@@ -101,7 +90,6 @@ end
 end
 
 
-
 procedure testR(M:IAutomaton) begin
 	var sc:java.util.Scanner(System.$in)
 	isTransducer:=ITransducer.class.isInstance(M)
@@ -126,8 +114,6 @@ procedure testR(M:IAutomaton) begin
 end
 	print "Execution terminated"
 end
-
-
 
 
 procedure testCodeDecodeRevAddDS(C:ITransducer, D:ITransducer) begin
@@ -194,7 +180,6 @@ procedure testCodeDecodeRevAddDS(C:ITransducer, D:ITransducer) begin
  end
  
  
- 
  procedure testCodeDecode(C:ITransducer, D:ITransducer) begin
 	var sc:java.util.Scanner(System.$in)
    
@@ -255,6 +240,3 @@ procedure testCodeDecodeRevAddDS(C:ITransducer, D:ITransducer) begin
 	print "Execution Ended"
  end
  
- 
-
-

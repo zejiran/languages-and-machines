@@ -58,8 +58,10 @@ public final class CodeDecode {
       sc=$invokeConstructor(java.util.Scanner.class,new Object[]{$invokeField(System.class,"in",true,null)});
       $line=35;
       Object coder=$fix(CodeDecode.createCoder());
-      $line=40;
-      Utilities.test($cast(gold.structures.automaton.IAutomaton.class,coder));
+      $line=36;
+      Object deCoder=$fix(CodeDecode.createDecoder());
+      $line=41;
+      Utilities.testCodeDecode($cast(gold.structures.automaton.ITransducer.class,coder),$cast(gold.structures.automaton.ITransducer.class,deCoder));
     }
     catch (Throwable $throwable) {
       $rethrow($throwable,CodeDecode.class,"main",$line);
@@ -88,11 +90,18 @@ public final class CodeDecode {
       Character r=null;
       r=$defaultValue(Character.class);
       $line=50;
-      r=$cast(Character.class,$fix($opAdditY('A',$opModulY($opAdditY($opSubtrY(symbol,'a'),shift),26))));
-      $line=51;
+      if ($opMembrY(symbol,$opIntvlY('a','z'))) {
+        $line=51;
+        r=$cast(Character.class,$fix($opAdditY('A',$opModulY($opAdditY($opSubtrY(symbol,'a'),shift),26))));
+      }
+      else {
+        $line=53;
+        r=$cast(Character.class,$fix($opAdditY('a',$opModulY($opAdditY($opSubtrY(symbol,'A'),shift),26))));
+      }
+      $line=55;
       $result=r;
       if (true) break $try;
-      $line=52;
+      $line=56;
       $rethrow(new RuntimeException("The function \"shiftSymbol(symbol:Object,shift:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -104,7 +113,7 @@ public final class CodeDecode {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=56;
+      $line=60;
       gold.structures.set.ISet $v1=$newSet();
       $v2:for (Object first:GCollections.unmodifiableCollection($opUnionY(GCollections.asSet(0),$opIntvlY('a','z')))) {
         for (Object second:GCollections.unmodifiableCollection($opUnionY(GCollections.asSet(0),$opIntvlY('a','z')))) {
@@ -124,18 +133,18 @@ public final class CodeDecode {
         }
       }
       Object Q=$fix($opUnionY($v1,GCollections.asSet('E',"Err")));
-      $line=65;
+      $line=69;
       Object \u03A3=$fix($opUnionY($opIntvlY('a','z'),GCollections.asSet(':','$')));
-      $line=66;
-      Object \u03A3_=$fix($opUnionY($opUnionY($opUnionY(\u03A3,$opIntvlY('A','Z')),GCollections.asSet('#')),$opIntvlY('0','5')));
-      $line=67;
-      Object q_0=$fix(GCollections.asList(0,0,0,0,0,0));
-      $line=68;
-      Object F=$fix(GCollections.asSet('E'));
       $line=70;
+      Object \u03A3_=$fix($opUnionY($opUnionY($opUnionY(\u03A3,$opIntvlY('A','Z')),GCollections.asSet('#')),$opIntvlY('0','5')));
+      $line=71;
+      Object q_0=$fix(GCollections.asList(0,0,0,0,0,0));
+      $line=72;
+      Object F=$fix(GCollections.asSet('E'));
+      $line=74;
       $result=$invokeConstructor(GDeterministicTransducer.class,new Object[]{Q,\u03A3,\u03A3_,q_0,F,new GMethod(CodeDecode.class,"\u03B4"),new GMethod(CodeDecode.class,"g"),new GMethod(CodeDecode.class,"h")});
       if (true) break $try;
-      $line=71;
+      $line=75;
       $rethrow(new RuntimeException("The function \"createCoder()\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -147,10 +156,10 @@ public final class CodeDecode {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=74;
+      $line=78;
       $result="Err";
       if (true) break $try;
-      $line=75;
+      $line=79;
       $rethrow(new RuntimeException("The function \"\u03B4(state:Object,input:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -169,58 +178,58 @@ public final class CodeDecode {
       Object pos=$v8.next();
       Object d=$v8.next();
       Object last=$v8.next();
-      $line=78;
+      $line=82;
       if ($opEqualY(input,'$')) {
-        $line=78;
+        $line=82;
         $result='E';
         if (true) break $try;
       }
       else {
-        $line=79;
+        $line=83;
         if ($opEqualY(input,':')) {
-          $line=80;
+          $line=84;
           if ($opEqualY(half,0)) {
-            $line=80;
+            $line=84;
             $result=GCollections.asList(first,second,1,pos,d,last);
             if (true) break $try;
           }
           else {
-            $line=81;
+            $line=85;
             $result="Err";
             if (true) break $try;
           }
         }
         else {
-          $line=84;
+          $line=88;
           if ($opEqualY(half,1)) {
-            $line=85;
+            $line=89;
             if (($opEqualY(input,first)||$opEqualY(input,second))) {
-              $line=86;
+              $line=90;
               $result=GCollections.asList(first,second,half,$opModulY($opAdditY(pos,1),3),$opModulY($opAdditY(d,1),5),input);
               if (true) break $try;
             }
             else {
-              $line=88;
+              $line=92;
               $result=GCollections.asList(first,second,half,$opModulY($opAdditY(pos,1),3),d,input);
               if (true) break $try;
             }
           }
           else {
-            $line=91;
+            $line=95;
             if ($opEqualY(first,0)) {
-              $line=92;
+              $line=96;
               $result=GCollections.asList(input,second,half,pos,d,last);
               if (true) break $try;
             }
             else {
-              $line=93;
+              $line=97;
               if ($opEqualY(second,0)) {
-                $line=94;
+                $line=98;
                 $result=GCollections.asList(first,input,half,pos,d,last);
                 if (true) break $try;
               }
               else {
-                $line=96;
+                $line=100;
                 $result="Err";
                 if (true) break $try;
               }
@@ -228,7 +237,7 @@ public final class CodeDecode {
           }
         }
       }
-      $line=100;
+      $line=104;
       $rethrow(new RuntimeException("The function \"\u03B4(\u27E8first,second,half,pos,d,last\u27E9:java.lang.Iterable,input:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -240,10 +249,10 @@ public final class CodeDecode {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=103;
+      $line=107;
       $result="";
       if (true) break $try;
-      $line=104;
+      $line=108;
       $rethrow(new RuntimeException("The function \"h(state:Object,input:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -262,61 +271,61 @@ public final class CodeDecode {
       Object pos=$v10.next();
       Object d=$v10.next();
       Object last=$v10.next();
-      $line=107;
+      $line=111;
       if ($opEqualY(input,'$')) {
-        $line=107;
+        $line=111;
         $result=d;
         if (true) break $try;
       }
       else {
-        $line=108;
+        $line=112;
         if ($opEqualY(input,':')) {
-          $line=109;
+          $line=113;
           if ($opEqualY(half,0)) {
-            $line=109;
+            $line=113;
             $result=input;
             if (true) break $try;
           }
           else {
-            $line=110;
+            $line=114;
             $result="";
             if (true) break $try;
           }
         }
         else {
-          $line=113;
+          $line=117;
           if ($opEqualY(half,1)) {
-            $line=114;
+            $line=118;
             if ($opEqualY(input,first)) {
-              $line=115;
+              $line=119;
               $result=second;
               if (true) break $try;
             }
             else {
-              $line=116;
+              $line=120;
               if ($opEqualY(input,second)) {
-                $line=117;
+                $line=121;
                 $result=first;
                 if (true) break $try;
               }
               else {
-                $line=119;
+                $line=123;
                 if ($opEqualY(input,last)) {
-                  $line=120;
+                  $line=124;
                   $result='#';
                   if (true) break $try;
                 }
                 else {
-                  $line=121;
+                  $line=125;
                   if ($opEqualY($opModulY($opAdditY(pos,1),3),1)) {
-                    $line=122;
+                    $line=126;
                     $result=CodeDecode.shiftSymbol(input,1);
                     if (true) break $try;
                   }
                   else {
-                    $line=123;
+                    $line=127;
                     if ($opEqualY($opModulY($opAdditY(pos,1),3),2)) {
-                      $line=124;
+                      $line=128;
                       $result=CodeDecode.shiftSymbol(input,0);
                       if (true) break $try;
                     }
@@ -327,14 +336,287 @@ public final class CodeDecode {
           }
         }
       }
-      $line=129;
+      $line=133;
       $result=input;
       if (true) break $try;
-      $line=130;
+      $line=134;
       $rethrow(new RuntimeException("The function \"h(\u27E8first,second,half,pos,d,last\u27E9:java.lang.Iterable,input:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
       $rethrow($throwable,CodeDecode.class,"h",$line);
+    }
+    return $result;
+  }
+  public static ITransducer createDecoder() {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      $line=138;
+      gold.structures.set.ISet $v11=$newSet();
+      $v12:for (Object first:GCollections.unmodifiableCollection($opUnionY(GCollections.asSet(0),$opIntvlY('a','z')))) {
+        for (Object second:GCollections.unmodifiableCollection($opUnionY(GCollections.asSet(0),$opIntvlY('a','z')))) {
+          for (Object half:GCollections.unmodifiableCollection(GCollections.asSet(0,1))) {
+            int $v13=$int(0);
+            int $v14=$int(3)-1;
+            for (int pos=$v13; pos<=$v14; pos++) {
+              int $v15=$int(0);
+              int $v16=$int(5)-1;
+              for (int d=$v15; d<=$v16; d++) {
+                for (Object last:GCollections.unmodifiableCollection($opUnionY($opUnionY(GCollections.asSet(0),$opIntvlY('a','z')),GCollections.asSet('$')))) {
+                  $v11.add(GCollections.asList(first,second,half,pos,d,last));
+                }
+              }
+            }
+          }
+        }
+      }
+      Object Q1=$fix($opUnionY($v11,GCollections.asSet('E',"Err")));
+      $line=147;
+      Object \u03A3_=$fix($opUnionY($opIntvlY('a','z'),GCollections.asSet(':','$')));
+      $line=148;
+      Object \u03A3=$fix($opUnionY($opUnionY($opUnionY($opIntvlY('a','z'),$opIntvlY('A','Z')),GCollections.asSet('#',':')),$opIntvlY('0','5')));
+      $line=149;
+      Object q_0=$fix(GCollections.asList(0,0,0,0,0,0));
+      $line=150;
+      Object F=$fix(GCollections.asSet('E'));
+      $line=152;
+      $result=$invokeConstructor(GDeterministicTransducer.class,new Object[]{Q1,\u03A3,\u03A3_,q_0,F,new GMethod(CodeDecode.class,"\u03B41"),new GMethod(CodeDecode.class,"g"),new GMethod(CodeDecode.class,"h1")});
+      if (true) break $try;
+      $line=153;
+      $rethrow(new RuntimeException("The function \"createDecoder()\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,CodeDecode.class,"createDecoder",$line);
+    }
+    return $cast(ITransducer.class,$result);
+  }
+  public static Object \u03B41(Object state, Object input) {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      $line=156;
+      $result="Err";
+      if (true) break $try;
+      $line=157;
+      $rethrow(new RuntimeException("The function \"\u03B41(state:Object,input:Object)\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,CodeDecode.class,"\u03B41",$line);
+    }
+    return $result;
+  }
+  public static Object \u03B41(java.lang.Iterable $v17, Object input) {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      java.util.Iterator $v18=GCollections.unmodifiableCollection($v17).iterator();
+      Object first=$v18.next();
+      Object second=$v18.next();
+      Object half=$v18.next();
+      Object pos=$v18.next();
+      Object d=$v18.next();
+      Object last=$v18.next();
+      $line=160;
+      if ($opMembrY(input,$opIntvlY('0','5'))) {
+        $line=161;
+        $result='E';
+        if (true) break $try;
+      }
+      else {
+        $line=162;
+        if ($opEqualY(input,':')) {
+          $line=163;
+          if ($opEqualY(half,0)) {
+            $line=164;
+            $result=GCollections.asList(first,second,1,pos,d,last);
+            if (true) break $try;
+          }
+          else {
+            $line=165;
+            $result="Err";
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=168;
+          if ($opEqualY(half,1)) {
+            $line=169;
+            if (($opEqualY(input,first)||$opEqualY(input,second))) {
+              $line=170;
+              $result=GCollections.asList(first,second,half,$opModulY($opAdditY(pos,1),3),$opModulY($opAdditY(d,1),5),$invokeMethod(CodeDecode.class,"h1",true,null,new Object[]{GCollections.asList(first,second,half,pos,d,last),input}));
+              if (true) break $try;
+            }
+            else {
+              $line=176;
+              $result=GCollections.asList(first,second,half,$opModulY($opAdditY(pos,1),3),d,$invokeMethod(CodeDecode.class,"h1",true,null,new Object[]{GCollections.asList(first,second,half,pos,d,last),input}));
+              if (true) break $try;
+            }
+          }
+          else {
+            $line=182;
+            if (($opEqualY(first,0)&&$opMembrY(input,$opIntvlY('a','z')))) {
+              $line=183;
+              $result=GCollections.asList(input,second,half,pos,d,last);
+              if (true) break $try;
+            }
+            else {
+              $line=184;
+              if (($opEqualY(second,0)&&$opMembrY(input,$opIntvlY('a','z')))) {
+                $line=185;
+                $result=GCollections.asList(first,input,half,pos,d,last);
+                if (true) break $try;
+              }
+              else {
+                $line=186;
+                if ($opEqualY(input,'#')) {
+                  $line=187;
+                  $result="Err";
+                  if (true) break $try;
+                }
+                else {
+                  $line=189;
+                  $result="Err";
+                  if (true) break $try;
+                }
+              }
+            }
+          }
+        }
+      }
+      $line=193;
+      $result="Err";
+      if (true) break $try;
+      $line=194;
+      $rethrow(new RuntimeException("The function \"\u03B41(\u27E8first,second,half,pos,d,last\u27E9:java.lang.Iterable,input:Object)\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,CodeDecode.class,"\u03B41",$line);
+    }
+    return $result;
+  }
+  public static Object h1(Object state, Object input) {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      $line=197;
+      $result="";
+      if (true) break $try;
+      $line=198;
+      $rethrow(new RuntimeException("The function \"h1(state:Object,input:Object)\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,CodeDecode.class,"h1",$line);
+    }
+    return $result;
+  }
+  public static Object h1(java.lang.Iterable $v19, Object input) {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      java.util.Iterator $v20=GCollections.unmodifiableCollection($v19).iterator();
+      Object first=$v20.next();
+      Object second=$v20.next();
+      Object half=$v20.next();
+      Object pos=$v20.next();
+      Object d=$v20.next();
+      Object last=$v20.next();
+      $line=201;
+      if (($opMembrY(input,$opIntvlY('a','z'))&&$bool(($opEqualY(first,0)||$opEqualY(second,0))))) {
+        $line=202;
+        $result=input;
+        if (true) break $try;
+      }
+      $line=204;
+      if ((($opMembrY(input,$opIntvlY('0','5'))||$opEqualY(first,0))||$opEqualY(second,0))) {
+        $line=205;
+        $result='$';
+        if (true) break $try;
+      }
+      $line=207;
+      if (($opEqualY(input,'#')&&$opEqualY(last,0))) {
+        $line=208;
+        $result='$';
+        if (true) break $try;
+      }
+      $line=210;
+      if ($opMembrY(input,$opIntvlY('A','Z'))) {
+        $line=211;
+        if ($opEqualY(half,1)) {
+          $line=212;
+          if ($opEqualY($opModulY($opAdditY(pos,1),3),1)) {
+            $line=213;
+            $result=CodeDecode.shiftSymbol(input,25);
+            if (true) break $try;
+          }
+          else {
+            $line=215;
+            $result=CodeDecode.shiftSymbol(input,0);
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=218;
+          $result="";
+          if (true) break $try;
+        }
+      }
+      $line=221;
+      if ($opEqualY(input,'#')) {
+        $line=222;
+        $result=last;
+        if (true) break $try;
+      }
+      else {
+        $line=223;
+        if ($opEqualY(input,':')) {
+          $line=224;
+          if ($opEqualY(half,0)) {
+            $line=224;
+            $result=input;
+            if (true) break $try;
+          }
+          else {
+            $line=225;
+            $result="";
+            if (true) break $try;
+          }
+        }
+        else {
+          $line=228;
+          if ($opEqualY(half,1)) {
+            $line=229;
+            if ($opEqualY(input,first)) {
+              $line=230;
+              $result=second;
+              if (true) break $try;
+            }
+            else {
+              $line=231;
+              if ($opEqualY(input,second)) {
+                $line=232;
+                $result=first;
+                if (true) break $try;
+              }
+              else {
+                $line=234;
+                if ($opEqualY(input,'#')) {
+                  $line=235;
+                  $result=last;
+                  if (true) break $try;
+                }
+              }
+            }
+          }
+        }
+      }
+      $line=240;
+      $result=input;
+      if (true) break $try;
+      $line=241;
+      $rethrow(new RuntimeException("The function \"h1(\u27E8first,second,half,pos,d,last\u27E9:java.lang.Iterable,input:Object)\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,CodeDecode.class,"h1",$line);
     }
     return $result;
   }
