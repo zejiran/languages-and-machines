@@ -1,0 +1,35 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+
+// 
+//   Implements an automaton that performs top-down derivation for the following grammar
+//    S -> B
+//    S -> aaSb
+//    B -> cBdd
+//     B -> λ
+//   Recognizing :  { aˆ(2n)cˆ(m) d^(2m) b^(n)    }
+
+function createAutomaton():IPushdownAutomaton begin
+	Q:={"s","q","f"}
+	Σ:={'a','b','c','d'}
+	Γ:={'$','a','b','c','d','S','B'}
+	q₀:="s"
+	F:={"f"}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	M.delta("s","q","").push("$S") // S es el símbolo distinguido
+	M.delta("q","f","").pop("$")
+	M.delta("q","q","a").pop("a")
+	M.delta("q","q","c").pop("c")
+	M.delta("q","q","b").pop("b")
+	M.delta("q","q","d").pop("d")
+	M.delta("q","q","").pop("B") //    S -> B
+	M.delta("q","q","").changeTop("B","ddBc") //    B -> cBdd
+	M.delta("q","q","").changeTop("S","B") //    S -> B
+	M.delta("q","q","").changeTop("S","bSaa") //    S -> aaSb
+	
+	
+	return M
+end

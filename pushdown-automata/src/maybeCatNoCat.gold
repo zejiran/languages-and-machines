@@ -1,0 +1,47 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+// An automaton that recognizes strings of  the form   WaT  where W in {a,c,t}*, T in {c,a,t}*
+//   |W| = |T|  
+//  cat does not appeat in T
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+
+
+function createAutomaton():IPushdownAutomaton begin
+	Q:={"_cat","c_at","ca_t","cat","I"}
+	Σ:={'c','a','t'}
+	Γ:={'1'}
+	q₀:="I"
+	F:=Q \ {"cat"}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+
+   M.delta("I","I","a").push("1")
+   M.delta("I","I","c").push("1")
+   M.delta("I","I","t").push("1")
+
+	M.delta("I","_cat","").ignore()
+
+	M.delta("_cat","c_at","c").pop("1")
+	M.delta("_cat","_cat","a").pop("1")
+	M.delta("_cat","_cat","t").pop("1")
+
+	M.delta("c_at","c_at","c").pop("1")
+	M.delta("c_at","ca_t","a").pop("1")
+	M.delta("c_at","_cat","t").pop("1")
+
+
+	M.delta("ca_t","c_at","c").pop("1")
+	M.delta("ca_t","_cat","a").pop("1")
+	M.delta("ca_t","cat","t").ignore()
+
+
+return M
+end

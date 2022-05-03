@@ -1,0 +1,81 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+// An automaton that recognizes strings of  the form WV.
+//  #W = #V
+//   
+//   Where:
+//     W ∈ ∑*,   	   V ∈ ∑*,   	   	
+//      No symbol in W appears in V
+//-----------------------
+//   By default  A = ('a' ‥ 'g'), it can be changed invoking the program with a string  of symbols. 
+//   A  will contain all the the symbols in the string
+//  
+
+using gold.**
+
+var  A  
+procedure main(args:String[]) begin
+ 	   
+	if  args.length=0  then  A:=('a' ‥ 'g')
+	else	
+		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}\{'$'}
+    end
+   //GAutomataFrame.show(create())
+   testPerm(create())
+ end
+
+        
+   
+    
+function create():IAutomaton begin
+	Q:= (℘(A)×(1‥2))    
+	Σ:=A
+	Γ:={'1'}
+	q₀ := ⟨Ø,1⟩
+	F:= (℘(A)×{2})
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+
+	
+	for each S in ℘(A) do
+		for each  t in A do
+	
+	       M.delta(⟨S,1⟩,⟨S∪{t},1⟩,t).push("1")
+			if  not (t in S) then
+				M.delta(⟨S,2⟩,⟨S,2⟩,t).pop("1")
+			end
+				
+     end
+     M.delta(⟨S,1⟩,⟨S,2⟩,"").ignore()
+ end
+
+   return 	M
+end
+
+
+
+//  procedure to test the automata without the graphical interface 
+procedure testPerm(C:IAutomaton) begin
+ 	var sc:java.util.Scanner(System.$in)
+ 	var  string: String
+   	
+     
+   	print  "Testing"
+
+	while true do
+		print "----------------------------"
+		print "Enter a string:"
+		string:=sc.nextLine()
+		if string = "STOP" then  break end
+		result:=C.acceptsString(string)
+		print "The string was "+(result?"accepted":"REJECTED") 
+	end
+	print "End test"
+ 
+end
+
+
+

@@ -1,0 +1,57 @@
+//----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+// An automaton that recognizes strings of  the form 
+//    1ˆn+1ˆm = 1^(n+m)    n>0  m>0
+//     1ˆn - 1ˆm = 1^(n-m)    0 < n <  m
+//     1ˆn - 1ˆm =  -1^(m-n)    0 < m < n
+//
+
+   
+ using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+function createAutomaton():IPushdownAutomaton begin
+	Σ:={'1','+','-','=','0'}
+	 
+	Q:=  {0,1,2,4,5,7,8,9} 
+	
+	Γ:={'$','1'}
+	q₀:=0
+	F:={9}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+		M.delta(0,1,"").push("$")
+		
+		M.delta(1,2,"1").push("1")
+		M.delta(2,2,"1").push("1")
+		M.delta(2,4,"+1").push("1")
+		M.delta(2,7,"-1").pop("1")
+		
+		M.delta(4,4,"1").push("1")
+		M.delta(4,5,"=1").pop("1")
+		M.delta(5,5,"1").pop("1")
+		M.delta(5,9,"").pop("$")
+			
+		
+		
+		M.delta(7,7,"1").pop("1")
+		M.delta(7,8,"1").pushOn("$","1")
+		
+		M.delta(7,5,"=1").pop("1")
+			
+		M.delta(8,8,"1").push("1")
+		M.delta(8,5,"=-1").pop("1")
+		
+		
+	return M
+end
+
+
+

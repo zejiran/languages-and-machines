@@ -1,0 +1,38 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+//  Recognizes  L = {aˆnbˆn: n>=0}  
+//
+
+
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+function createAutomaton():IPushdownAutomaton begin
+	Σ:=('a'‥'b')
+
+
+	Q:=  {1,2} 
+	
+	Γ:= {'1'}
+	q₀:=1
+	F:={1,2}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+	M.delta(1,1,"a").push("1")
+   M.delta(1,2,"b").pop("1")
+	M.delta(2,2,"b").pop("1")
+	
+	
+	
+	return M
+end
+
+
+

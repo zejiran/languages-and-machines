@@ -1,0 +1,79 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//   Implements a topdown parser for this grammar:
+/// E  → n
+//E → f( L )
+//L →  E
+// L →  L , E
+   
+//  
+    
+using gold.**
+
+var  A  
+procedure main(args:String[]) begin
+ 	   
+	 GAutomataFrame.show(create())
+   //testAutomaton(create())
+ end
+
+        
+   
+    
+function create():IAutomaton begin
+	Q:= {"q","s","f"}  
+	Σ:= {'n','f',',', '(', ')'}
+	Γ:= Σ ∪ {'$','E', 'L'}
+	q₀ := "s"
+	F := {"f" }
+
+	  
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+ 
+    M.delta("s","q",λ).push("$E")
+    M.delta("q","f",λ).pop("$")
+
+   for each t in Σ do
+   		M.delta("q","q",t).pop(""+t)
+   end
+
+	M.delta("q","q",λ).changeTop("E","n")
+	M.delta("q","q",λ).changeTop("E",")L(f")
+   M.delta("q","q",λ).changeTop("L","E")
+   M.delta("q","q",λ).changeTop("L","E,L")
+
+
+
+
+    	
+
+   return 	M
+end
+ 
+
+
+//  procedure to test the automata without the graphical interface 
+procedure testAutomaton(C:IAutomaton) begin
+ 	var sc:java.util.Scanner(System.$in)
+ 	var  string: String
+   	
+     
+   	print  "Testing"
+
+	while true do
+		print "----------------------------"
+		print "Enter a string:"
+		string:=sc.nextLine()
+		if string = "STOP" then  break end
+		result:=C.acceptsString(string)
+		print "The string was "+(result?"accepted":"REJECTED") 
+	end
+	print "End test"
+ 
+end
+
+
+

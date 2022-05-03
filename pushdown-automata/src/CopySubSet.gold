@@ -1,0 +1,41 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+// An automaton that recognizes strings of  the form aˆn b aˆm aˆn b aˆm
+//  
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+function createAutomaton():IPushdownAutomaton begin
+	Σ:=('a'‥'b')
+	 
+	Q:=  {0,'I','F','M','N'} 
+	
+	
+	Γ:={'0','$'}
+	q₀:=0
+	F:={'F'}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+	M.delta(0,'I',λ).push("$")	
+	M.delta('I','I','a').push("0")
+	M.delta('I','M','b').ignore()
+	M.delta('M','M','a').pop("0")
+	M.delta('M','N',λ).pop("$")
+	M.delta('N','N','a').push("0")
+	M.delta('N','F','b').ignore()
+	M.delta('F','F','a').pop("0")
+	
+	return M
+end
+
+
+

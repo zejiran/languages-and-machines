@@ -1,0 +1,39 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+// An automaton that recognizes strings of  the form   WaT  where W in {a,b}*, T in {a,b}*
+//  and |W| = |T|  
+//  This is to say:  a is in the middle.
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+
+procedure main(args:String[]) begin
+	GAutomataFrame.show(createAutomaton())
+end
+function createAutomaton():IPushdownAutomaton begin
+	Σ:=('a'‥'b')
+	 
+	Q:=  {'I','F'} 
+	
+	Γ:={'1'}
+	q₀:='I'
+	F:={'F'}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+	M.delta('I','I','a').push("1")
+	M.delta('I','I','b').push("1")
+	M.delta('I','F','a').ignore()
+	
+	M.delta('F','F',"a").pop("1")
+	M.delta('F','F','b').pop("1")
+	
+	return M
+end
+
+
+

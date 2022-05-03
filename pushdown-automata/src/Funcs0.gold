@@ -1,0 +1,68 @@
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+// 
+//  
+//  Recognizes: the language of expressions defined as follows:
+// An Expression is an integer, represented with the symbol n
+// An Expression is a function represented with the symbol f, followed by one or more arguments separated by commas
+// Arguments are expressions 
+//  
+
+using gold.**
+
+var  A  
+procedure main(args:String[]) begin
+ 	   
+	 GAutomataFrame.show(create())
+   //testAutomaton(create())
+ end
+
+        
+   
+    
+function create():IAutomaton begin
+	Q:= {0,1}  
+	Σ:= {'n','f',',', '(', ')'}
+	Γ:={'1'}
+	q₀ := 0
+	F := {1 }
+
+	  
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+ 
+    M.delta(0,0,"f(").push("1")
+    M.delta(0,1,"n").ignore()
+    M.delta(1,1,"f()").pop("1")
+    M.delta(1,0,",").$skip("1")
+    M.delta(0,1,")").pop("1")
+    	
+
+   return 	M
+end
+ 
+
+
+//  procedure to test the automata without the graphical interface 
+procedure testAutomaton(C:IAutomaton) begin
+ 	var sc:java.util.Scanner(System.$in)
+ 	var  string: String
+   	
+     
+   	print  "Testing"
+
+	while true do
+		print "----------------------------"
+		print "Enter a string:"
+		string:=sc.nextLine()
+		if string = "STOP" then  break end
+		result:=C.acceptsString(string)
+		print "The string was "+(result?"accepted":"REJECTED") 
+	end
+	print "End test"
+ 
+end
+
+
+
