@@ -1,0 +1,23 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "Del"
+// Turing Machine nodes (N):
+N(0) = "W[#]C[SL]W[$a]"
+N(1) = "R"
+N(2) = "C[SL]"
+N(3) = "L"
+// Turing Machine initial node (I):
+I = 3@0
+// Turing Machine edges (E):
+E(0,1) = ""
+E(3,2) = "#"
+E(2,1) = ""
+E(3,0) = "$a in !{#}"
+// Turing Machine layout (ξ)
+ξ(0)=(280.00,236.00)
+ξ(1)=(360.00,280.00)
+ξ(2)=(280.00,324.00)
+ξ(3)=(192.00,280.00)
+ξ(3,2)=(124.00,236.00,273.00,325.00)
+ξ(3,0)=(124.00,236.00,280.00,236.00)

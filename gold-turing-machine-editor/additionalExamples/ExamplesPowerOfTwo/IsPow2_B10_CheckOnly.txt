@@ -1,0 +1,21 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "isPow2_B10_0"
+// Turing Machine nodes (N):
+N(0) = "W[#]C[isZero]"
+N(1) = "W[#]C[Div2_B10]"
+N(2) = "W[N]"
+N(3) = "C[isZero]"
+// Turing Machine initial node (I):
+I = 3@0
+// Turing Machine edges (E):
+E(3,1) = "N"
+E(1,1) = "Y"
+E(1,0) = "N"
+E(3,2) = "Y"
+// Turing Machine layout (ξ)
+ξ(0)=(572.00,232.00)
+ξ(1)=(396.00,232.00)
+ξ(2)=(256.00,328.00)
+ξ(3)=(256.00,232.00)

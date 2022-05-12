@@ -1,0 +1,30 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "isZero"
+// Turing Machine nodes (N):
+N(0) = "LC[Del]"
+N(1) = "R"
+N(2) = "C[Del]"
+N(3) = "L[#]W[Y]"
+N(4) = "L[#]W[N]"
+N(5) = "R"
+// Turing Machine initial node (I):
+I = 1@0
+// Turing Machine edges (E):
+E(5,0) = "!0,%"
+E(0,4) = ""
+E(2,0) = "!0,%"
+E(1,5) = "0"
+E(2,2) = "0"
+E(5,2) = "0"
+E(1,4) = "!0"
+E(5,3) = "%"
+E(2,3) = "%"
+// Turing Machine layout (ξ)
+ξ(0)=(388.00,256.00)
+ξ(1)=(288.00,144.00)
+ξ(2)=(520.00,256.00)
+ξ(3)=(520.00,144.00)
+ξ(4)=(288.00,256.00)
+ξ(5)=(388.00,144.00)

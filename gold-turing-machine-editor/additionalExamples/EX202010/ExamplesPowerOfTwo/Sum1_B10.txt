@@ -1,0 +1,22 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "Sum1_B10"
+// Turing Machine nodes (N):
+N(0) = "R[#]L"
+N(1) = "C[SR]W[1]"
+N(2) = "C[DSum1_B10]"
+N(3) = "W[0]L"
+// Turing Machine initial node (I):
+I = 0@0
+// Turing Machine edges (E):
+E(3,3) = "9"
+E(3,1) = "!0,1,2,3,4,5,6,7,8,9"
+E(3,2) = "0,1,2,3,4,5,6,7,8"
+E(0,2) = "0,1,2,3,4,5,6,7,8"
+E(0,3) = "9"
+// Turing Machine layout (ξ)
+ξ(0)=(72.00,112.00)
+ξ(1)=(624.00,224.00)
+ξ(2)=(388.00,112.00)
+ξ(3)=(288.00,228.00)

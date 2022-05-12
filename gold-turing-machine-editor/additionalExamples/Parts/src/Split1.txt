@@ -1,0 +1,27 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "Split1"
+// Turing Machine nodes (N):
+N(0) = "C[SR]W[%]L[#]"
+N(1) = "R"
+N(2) = "W[#]R[%]R"
+N(3) = "C[TestMid]"
+N(4) = "W[%]LW[$b]L[#]"
+N(5) = "W[#]"
+// Turing Machine initial node (I):
+I = 1@0
+// Turing Machine edges (E):
+E(1,0) = "!#"
+E(3,2) = "<"
+E(0,3) = ""
+E(4,3) = ""
+E(2,4) = "$b in !{#}"
+E(3,5) = "="
+// Turing Machine layout (ξ)
+ξ(0)=(376.00,168.00)
+ξ(1)=(260.00,168.00)
+ξ(2)=(384.00,304.00)
+ξ(3)=(516.00,168.00)
+ξ(4)=(680.00,300.00)
+ξ(5)=(700.00,156.00)

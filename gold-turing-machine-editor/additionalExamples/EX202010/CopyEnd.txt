@@ -1,0 +1,17 @@
+// Automaton type (ψ):
+ψ = TM
+// Turing Machine name (Z):
+Z = "CopyEnd"
+// Turing Machine nodes (N):
+N(0) = "R"
+N(1) = "W[#]R[#]W[$w]L[#]W[$w]"
+// Turing Machine initial node (I):
+I = 0@0
+// Turing Machine edges (E):
+E(1,0) = ""
+E(0,1) = "$w in !{$}"
+// Turing Machine layout (ξ)
+ξ(0)=(136.00,103.00)
+ξ(1)=(262.00,103.00)
+ξ(1,0)=(262.00,103.00,199.00,90.40,199.00,90.40,136.00,103.00)
+ξ(0,1)=(136.00,103.00,199.00,115.60,199.00,115.60,262.00,103.00)

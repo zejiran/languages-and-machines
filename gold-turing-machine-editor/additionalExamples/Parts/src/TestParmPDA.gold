@@ -1,0 +1,89 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+// -----------------------
+// Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+//------------------------------
+//  An automaton that recognizes strings :  W$B   (#W =  #B).  Where:
+//     all letters that appear in B also appear in W .
+//  letters may appear more than once in each side. But B cannot contain letters that  have not appeared in W
+
+//    Run this gold program with arguments:
+
+//  Argument should be a string that contains  letters in A,  fo example  abcdefgh
+ //   Will not work for alfabets larger than 13
+
+
+// NOTE that the pumping lemma is not applicable to this language, because this language
+//  is finite
+//
+//-----------------------
+
+
+
+
+var A
+
+procedure main(args:String[]) begin
+    if  args.length=0  then  A:=('a' ‥ 'c')
+	else	
+		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}
+    end
+//GAutomataFrame.show(createAutomaton())
+    test(createAutomaton())
+
+end
+
+
+function createAutomaton():IPushdownAutomaton begin
+	Parts :=  ℘(A)
+	Q:= (Parts×(1‥2))  
+	Σ:=A ∪ {'$'}
+	print (Σ)
+	q₀ := ⟨Ø,1⟩
+	F:= (℘(A)×{2})
+	Γ:={'1'}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+
+
+for  each  q in  Parts  do
+	for each s in A  do
+     	M.delta(⟨q,1⟩,⟨q ∪ {s},1⟩,""+s).push("1")
+    end
+    for each s in q  do
+     	M.delta(⟨q,2⟩,⟨q,2⟩,""+s).pop("1")
+    end
+    M.delta(⟨q,1⟩,⟨q,2⟩,"$").ignore()
+ end
+
+	return M
+end
+
+
+procedure test(C:IAutomaton) begin
+	var sc:java.util.Scanner(System.$in)
+   var stop: boolean
+   var  string: String
+   
+   
+   
+   stop := false
+   
+   
+		
+     
+   print  "Testing"
+	while true do
+		print "----------------------------"
+		print "Enter a string:"
+		string:=sc.nextLine()
+		result:=C.acceptsString(string)
+		print "The string was "+(result?"accepted":"REJECTED") 
+
+	end
+	
+ 
+end
+
+
