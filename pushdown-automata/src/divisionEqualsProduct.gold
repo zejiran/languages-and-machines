@@ -1,0 +1,68 @@
+/**
+ * TP4
+ *
+ * A stack automaton receiving a string over { 3, 5, 7, ×, q, r, x, =, +, ÷ }
+ * that follows the structure: x^n÷d=q^(n÷d)×d+r^(n mod d) | d ∈ { 3, 5, 7 }
+ * 
+ * Author: Juan Alegría - 202011282
+ */
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+
+procedure main(args:String[]) begin
+	//GAutomataFrame.show(createAutomaton())
+	testAutomaton(createAutomaton())
+end
+
+function createAutomaton():IPushdownAutomaton begin
+	Σ := { 'x', '÷', '3', '5', '7', '=', 'q', '×', '+', 'r' }
+	Q := { '$', 'I', 'F', '3', '5', '7' }
+	Γ := { '1', '$' }
+	q₀ := '$'
+	F := { 'F' }
+	M := GPushdownAutomaton(Q, Σ, Γ, q₀, F)
+
+	M.delta('$', 'I', λ).push("$")
+	M.delta('I', 'I', 'x').push("1")
+	M.delta('I', 'I', '÷').ignore()
+	M.delta('I', '3', '3').ignore()
+	M.delta('I', '5', '5').ignore()
+	M.delta('I', '7', '7').ignore()
+	M.delta('3', '3', '=').ignore()
+	M.delta('5', '5', '=').ignore()
+	M.delta('7', '7', '=').ignore()
+	M.delta('3', '3', 'q').pop("111")
+	M.delta('5', '5', 'q').pop("11111")
+	M.delta('7', '7', 'q').pop("1111111")
+	M.delta('3', '3', '×').ignore()
+	M.delta('5', '5', '×').ignore()
+	M.delta('7', '7', '×').ignore()
+	M.delta('3', 'I', '3').ignore()
+	M.delta('5', 'I', '5').ignore()
+	M.delta('7', 'I', '7').ignore()
+	M.delta('I', 'I', '+').ignore()
+	M.delta('I', 'I', 'r').pop("1")
+	M.delta('I', 'F', λ).pop("$")
+
+	return M
+end
+
+procedure testAutomaton(C:IAutomaton) begin
+ 	var sc:java.util.Scanner(System.$in)
+ 	var  string: String
+   	
+   	print  "Stack Automaton Ready"
+
+	while true do
+		print "----------------------------"
+		print "Enter a string:"
+		string:=sc.nextLine()
+		if string = "STOP" then  break end
+		result:=C.acceptsString(string)
+		print "The string was "+(result?"accepted":"REJECTED") 
+	end
+	print "End test"
+ 
+end
