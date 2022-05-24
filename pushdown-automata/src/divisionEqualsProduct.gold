@@ -12,38 +12,69 @@ using gold.visualization.automaton.*
 
 
 procedure main(args:String[]) begin
-	//GAutomataFrame.show(createAutomaton())
+	// GAutomataFrame.show(createAutomaton())
 	testAutomaton(createAutomaton())
 end
 
 function createAutomaton():IPushdownAutomaton begin
 	Σ := { 'x', '÷', '3', '5', '7', '=', 'q', '×', '+', 'r' }
 	Q := { '$', 'I', 'F', '3', '5', '7' }
-	Γ := { '1', '$' }
+	Γ := { '1', '$', '0' }
 	q₀ := '$'
 	F := { 'F' }
 	M := GPushdownAutomaton(Q, Σ, Γ, q₀, F)
 
+
 	M.delta('$', 'I', λ).push("$")
+	
+	// Add n symbols to stack.
 	M.delta('I', 'I', 'x').push("1")
+	
 	M.delta('I', 'I', '÷').ignore()
+	
 	M.delta('I', '3', '3').ignore()
 	M.delta('I', '5', '5').ignore()
 	M.delta('I', '7', '7').ignore()
+	
 	M.delta('3', '3', '=').ignore()
 	M.delta('5', '5', '=').ignore()
 	M.delta('7', '7', '=').ignore()
+	
+	// Clear m=n÷d.
 	M.delta('3', '3', 'q').pop("111")
 	M.delta('5', '5', 'q').pop("11111")
 	M.delta('7', '7', 'q').pop("1111111")
+	
 	M.delta('3', '3', '×').ignore()
 	M.delta('5', '5', '×').ignore()
 	M.delta('7', '7', '×').ignore()
-	M.delta('3', 'I', '3').ignore()
-	M.delta('5', 'I', '5').ignore()
-	M.delta('7', 'I', '7').ignore()
+	
+	// Push module limit of each d.
+	M.delta('3', 'I', '3').push("00")
+	M.delta('5', 'I', '5').push("0000")
+	M.delta('7', 'I', '7').push("000000")
+	
 	M.delta('I', 'I', '+').ignore()
-	M.delta('I', 'I', 'r').pop("1")
+	
+	// Clear p symbols.
+	M.delta('I', 'I', 'r').pop("0")
+	
+	// Reach final state according to non-deterministic remaining stacks
+	M.delta('I', 'F', λ).pop("$00")
+	M.delta('I', 'F', λ).pop("$10")
+	M.delta('I', 'F', λ).pop("$11")
+	M.delta('I', 'F', λ).pop("$0000")
+	M.delta('I', 'F', λ).pop("$1000")
+	M.delta('I', 'F', λ).pop("$1100")
+	M.delta('I', 'F', λ).pop("$1110")
+	M.delta('I', 'F', λ).pop("$1111")
+	M.delta('I', 'F', λ).pop("$000000")
+	M.delta('I', 'F', λ).pop("$100000")
+	M.delta('I', 'F', λ).pop("$110000")
+	M.delta('I', 'F', λ).pop("$111000")
+	M.delta('I', 'F', λ).pop("$111100")
+	M.delta('I', 'F', λ).pop("$111110")
+	M.delta('I', 'F', λ).pop("$111111")
 	M.delta('I', 'F', λ).pop("$")
 
 	return M
