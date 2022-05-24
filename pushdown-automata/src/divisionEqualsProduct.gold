@@ -75,7 +75,6 @@ function createAutomaton():IPushdownAutomaton begin
 	M.delta('I', 'F', λ).pop("$111100")
 	M.delta('I', 'F', λ).pop("$111110")
 	M.delta('I', 'F', λ).pop("$111111")
-	M.delta('I', 'F', λ).pop("$")
 
 	return M
 end

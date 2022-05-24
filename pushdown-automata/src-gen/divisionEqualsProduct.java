@@ -107,12 +107,10 @@ public final class divisionEqualsProduct {
       $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta('I','F',$cast(java.lang.String.class,"")),new Object[]{"$111110"});
       $line=77;
       $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta('I','F',$cast(java.lang.String.class,"")),new Object[]{"$111111"});
-      $line=78;
-      $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta('I','F',$cast(java.lang.String.class,"")),new Object[]{"$"});
-      $line=80;
+      $line=79;
       $result=M;
       if (true) break $try;
-      $line=81;
+      $line=80;
       $rethrow(new RuntimeException("The function \"createAutomaton()\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -124,34 +122,34 @@ public final class divisionEqualsProduct {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=84;
+      $line=83;
       java.util.Scanner sc=null;
       sc=$invokeConstructor(java.util.Scanner.class,new Object[]{$invokeField(System.class,"in",true,null)});
-      $line=85;
+      $line=84;
       String string=null;
       string=$defaultValue(String.class);
-      $line=87;
+      $line=86;
       System.out.println($message(new Object[]{"Stack Automaton Ready"}));
-      $line=89;
+      $line=88;
       while (true) {
         if (!($bool(true))) break;
-        $line=90;
+        $line=89;
         System.out.println($message(new Object[]{"----------------------------"}));
-        $line=91;
+        $line=90;
         System.out.println($message(new Object[]{"Enter a string:"}));
-        $line=92;
+        $line=91;
         string=$cast(String.class,$fix(((java.util.Scanner)sc).nextLine()));
-        $line=93;
+        $line=92;
         if ($opEqualY(string,"STOP")) {
-          $line=93;
+          $line=92;
           break;
         }
-        $line=94;
+        $line=93;
         Object result=$fix(((gold.structures.automaton.IAutomaton)C).acceptsString($cast(java.lang.String.class,string)));
-        $line=95;
+        $line=94;
         System.out.println($message(new Object[]{$opAdditY("The string was ",(($bool(result))?("accepted"):("REJECTED")))}));
       }
-      $line=97;
+      $line=96;
       System.out.println($message(new Object[]{"End test"}));
     }
     catch (Throwable $throwable) {
