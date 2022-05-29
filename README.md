@@ -6,13 +6,13 @@ Collection of projects made on a language and computation theory course at Unive
 - For using standard Gold execute this command: 
 
 ```
-./languages-and-machines/gold-mac/eclipseGOLD_KEPLER/Eclipse.app/Contents/MacOS/eclipse -vm /Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/bin/java
+./gold-mac/eclipseGOLD_KEPLER/Eclipse.app/Contents/MacOS/eclipse -vm /Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/bin/java
 ```
 
 - For using Gold Turing Machine Editor, run:
 
 ```
-java -jar ./languages-and-machines/gold-turing-machine-editor/gold-tm.jar
+java -jar ./turing-machines/gold-tm.jar
 ```
 
 ## License
