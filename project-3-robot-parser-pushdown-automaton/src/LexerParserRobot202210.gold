@@ -180,7 +180,7 @@ procedure initialize() begin
 	translation.put("repeat", 'r')
 	translation.put("defun", 'f')
 	
-	translation.put("facing-p", 'I')
+	translation.put("facing-p", 'i')
 	translation.put("can-put-p", 'U')
 	translation.put("can-pick-p", 'K')
 	translation.put("can-move-p", 'O')
@@ -340,14 +340,18 @@ end
 function createParser(): IPushdownAutomaton begin
 	Q := (0‥6)
 	Σ := Out
-	Γ := { '1', 'D', '=', 'M', 'T', 'f', 'P', 'p',
-			'm', 'd', 'V', 's', 'c', '', '', '', '', ''
+	Γ := { 
+			'1', 'D', '=', 'M', 'T', 'f', 'P', 
+			'p', 'm', 'd', 'V', 's', 'c', 'I',
+			'l', 'r', 'f', 'e', 'U', 'K', 'O', 
+			'n' 
 		  }
 	q₀ := 0
 	F := { 0 }
-	
+
 	M := GPushdownAutomaton(Q, Σ, Γ, q₀, F)
 	
+	/// ## -- Commands -- ##
 	// (defvar name n)
 	M.delta( 0, 1, '(' ).push("1")
 	M.delta( 1, 2, 'D' ).push("D")
@@ -444,52 +448,81 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 3, 'v' ).ignore()
 	M.delta( 3, 3, '#' ).ignore()
 	M.delta( 3, 0, ')' ).pop("1c")
+	
+	/// ## -- Control Structures -- ##
 	// (if condition Block1 Block2)
-	M.delta( 0, 1, "(" ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
+	M.delta( 0, 1, '(' ).push("1")
+	M.delta( 1, 2, 'I' ).push("I")
+	// A condition is called for changing state from 2 to 6
+	M.delta( 6, 0, '(' ).push("II")
+	M.delta( 0, 2, ')' ).pop("I")
+	M.delta( 2, 0, '(' ).push("II")
+	M.delta( 2, 4, ')' ).pop("I")
+	M.delta( 4, 0, ')' ).pop("1III")
 	// (loop condition Block)
 	M.delta( 0, 1, '(' ).push("1")
-
+	M.delta( 1, 2, 'l' ).push("l")
 	M.delta( , 0, ')' ).pop("1")
 	// (repeat n Block)
 	M.delta( 0, 1, '(' ).push("1")
 
 	M.delta( , 0, ')' ).pop("1")
 	// (defun name (Params)Block)
-		M.delta( 0, 1, "(" ).push("1")
+	M.delta( 0, 1, "(" ).push("1")
 
 	M.delta( , 0, ')' ).pop("1")
-	// (facing-p O)
-	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	// (can-put-p X n)
-	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	// (can-pick-p X n)
-	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	// (can-move-p D)
-	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	// (not cond)
-	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	
-⧐	translation.put("if", 'I')
-⧐	translation.put("loop", 'l')
-⧐	translation.put("repeat", 'r')
+	⧐	translation.put("repeat", 'r')
 ⧐	translation.put("defun", 'f')
-⧐	translation.put("facing-p", 'I')
-⧐	translation.put("can-put-p", 'U')
-⧐	translation.put("can-pick-p", 'K')
-⧐	translation.put("can-move-p", 'O')
-⧐	translation.put("not", 'n')
+	
+	/// ## -- Conditions -- ##
+	// (facing-p O)
+	M.delta( 2, 4, '(' ).push("1")
+	M.delta( 4, 5, 'i' ).push("i")
+	M.delta( 5, 2, 'N' ).push("i")
+	M.delta( 5, 2, 'S' ).push("i")
+	M.delta( 5, 2, 'E' ).push("i")
+	M.delta( 5, 2, 'W' ).push("i")
+	M.delta( 2, 6, ')' ).pop("1ii")
+	// (can-put-p X n)
+	M.delta( 2, 4, '(' ).push("1")
+	M.delta( 4, 5, 'U' ).push("U")
+	M.delta( 5, 3, 'c' ).push("U")
+	M.delta( 5, 3, 'b' ).push("U")
+	M.delta( 3, 2, '#' ).push("U")
+	M.delta( 3, 2, 'V' ).push("U")
+	M.delta( 3, 2, 'v' ).push("U")
+	M.delta( 2, 6, ')' ).pop("1UUU")
+	// (can-pick-p X n)
+	M.delta( 2, 4, '(' ).push("1")
+	M.delta( 4, 5, 'K' ).push("K")
+	M.delta( 5, 3, 'c' ).push("K")
+	M.delta( 5, 3, 'b' ).push("K")
+	M.delta( 3, 2, '#' ).push("K")
+	M.delta( 3, 2, 'V' ).push("K")
+	M.delta( 3, 2, 'v' ).push("K")
+	M.delta( 2, 6, ')' ).pop("1KKK")
+	// (can-move-p D)
+	M.delta( 2, 4, '(' ).push("1")
+	M.delta( 4, 5, 'O' ).push("O")
+	M.delta( 5, 2, 'N' ).push("O")
+	M.delta( 5, 2, 'S' ).push("O")
+	M.delta( 5, 2, 'E' ).push("O")
+	M.delta( 5, 2, 'W' ).push("O")
+	M.delta( 2, 6, ')' ).pop("1OO")
+	// (function-call (params)*) as a condition
+	M.delta( 2, 1, '(' ).push("1")
+	M.delta( 1, 3, 'V' ).push("fc")
+	M.delta( 1, 3, 'v' ).push("fc")
+	M.delta( 3, 3, 'V' ).ignore()
+	M.delta( 3, 3, 'v' ).ignore()
+	M.delta( 3, 3, '#' ).ignore()
+	M.delta( 3, 6, ')' ).pop("1fc")
+	// (not cond)
+	M.delta( 2, 5, '(' ).push("1")
+	M.delta( 5, 2, 'n' ).push("n")
+	// A condition is called for changing state from 2 to 6
+	M.delta( 2, 6, ')' ).pop("1n")
+
 	return M
 end
 
