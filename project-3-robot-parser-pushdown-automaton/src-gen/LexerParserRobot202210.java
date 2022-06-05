@@ -387,6 +387,8 @@ public final class LexerParserRobot202210 {
       Object lexer=$fix(LexerParserRobot202210.createLexer());
       $line=49;
       Object parser=$fix(LexerParserRobot202210.createParser());
+      $line=52;
+      GAutomataFrame.show($cast(gold.structures.automaton.IAutomaton.class,parser));
       $line=53;
       LexerParserRobot202210.testLexerParser($cast(gold.structures.automaton.ITransducer.class,lexer),$cast(gold.structures.automaton.IPushdownAutomaton.class,parser));
     }
@@ -605,7 +607,7 @@ public final class LexerParserRobot202210 {
       $line=147;
       keyWords=$cast(ISet.class,$fix(GCollections.asSet(":north",":south",":east",":west",":front",":back",":right",":left",":around",":balloons",":chips","=","defvar","move","turn","face","put","pick","move-dir","run-dirs","move-face","skip","if","loop","repeat","defun","facing-p","can-put-p","can-pick-p","can-move-p","not")));
       $line=157;
-      allSymbols=$cast(ISet.class,$fix(GCollections.asSet("(",")")));
+      allSymbols=$cast(ISet.class,$fix(GCollections.asSet("(",")","=")));
       $line=162;
       ((gold.structures.map.GHashTableMap)translation).put(":north",'N');
       $line=163;
@@ -1227,15 +1229,15 @@ public final class LexerParserRobot202210 {
       $line=428;
       $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(4,0,$cast(java.lang.String.class,')')),new Object[]{"1mmm"});
       $line=431;
-      $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(1,3,$cast(java.lang.String.class,'d')),new Object[]{"d"});
+      $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(1,2,$cast(java.lang.String.class,'d')),new Object[]{"d"});
       $line=432;
-      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(3,2,$cast(java.lang.String.class,'F')),new Object[]{});
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(2,2,$cast(java.lang.String.class,'F')),new Object[]{});
       $line=433;
-      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(3,2,$cast(java.lang.String.class,'R')),new Object[]{});
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(2,2,$cast(java.lang.String.class,'R')),new Object[]{});
       $line=434;
-      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(3,2,$cast(java.lang.String.class,'L')),new Object[]{});
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(2,2,$cast(java.lang.String.class,'L')),new Object[]{});
       $line=435;
-      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(3,2,$cast(java.lang.String.class,'B')),new Object[]{});
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(2,2,$cast(java.lang.String.class,'B')),new Object[]{});
       $line=436;
       $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(2,0,$cast(java.lang.String.class,')')),new Object[]{"1d"});
       $line=439;
