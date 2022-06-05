@@ -462,26 +462,45 @@ function createParser(): IPushdownAutomaton begin
 	// (if condition Block1 Block2)
 	M.delta( 0, 1, '(' ).push("1")
 	M.delta( 1, 2, 'I' ).push("I")
-	// A condition is called for changing state from 2 to 6
+	⧐ A condition is called for changing state from 2 to 6
 	M.delta( 6, 0, '(' ).push("II")
+	⧐ Block1
 	M.delta( 0, 2, ')' ).pop("I")
 	M.delta( 2, 0, '(' ).push("II")
+	⧐ Block2
 	M.delta( 2, 4, ')' ).pop("I")
 	M.delta( 4, 0, ')' ).pop("1III")
 	// (loop condition Block)
 	M.delta( 0, 1, '(' ).push("1")
 	M.delta( 1, 2, 'l' ).push("l")
-	M.delta( , 0, ')' ).pop("1")
+	⧐ A condition is called for changing state from 2 to 6
+	M.delta( 6, 0, '(' ).push("ll")
+	⧐ Block
+	M.delta( 0, 2, ')' ).pop("l")
+	M.delta( 2, 0, ')' ).pop("1ll")
 	// (repeat n Block)
 	M.delta( 0, 1, '(' ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
+	M.delta( 1, 2, 'r' ).push("r")
+	M.delta( 2, 6, '#' ).push("r")
+	M.delta( 2, 6, 'V' ).push("r")
+	M.delta( 2, 6, 'v' ).push("r")
+	M.delta( 6, 0, '(' ).push("rr")
+	⧐ Block
+	M.delta( 0, 2, ')' ).pop("r")
+	M.delta( 2, 0, ')' ).pop("1rrr")
 	// (defun name (Params)Block)
 	M.delta( 0, 1, "(" ).push("1")
-
-	M.delta( , 0, ')' ).pop("1")
-	⧐	translation.put("repeat", 'r')
-⧐	translation.put("defun", 'f')
+	M.delta( 1, 2, 'f' ).push("f")
+	M.delta( 2, 3, 'V' ).push("f")
+	M.delta( 2, 3, 'v' ).push("f")
+	M.delta( 3, 3, "(" ).push("ff")
+	M.delta( 3, 3, 'V' ).ignore()
+	M.delta( 3, 3, 'v' ).ignore()
+	M.delta( 3, 6, ')' ).pop("f")
+	M.delta( 6, 0, '(' ).push("ff")
+	⧐ Block
+	M.delta( 0, 2, ')' ).pop("f")
+	M.delta( 2, 0, ')' ).pop("1ffff")
 	
 	/// ## -- Conditions -- ##
 	// (facing-p O)
@@ -529,7 +548,7 @@ function createParser(): IPushdownAutomaton begin
 	// (not cond)
 	M.delta( 2, 5, '(' ).push("1")
 	M.delta( 5, 2, 'n' ).push("n")
-	// A condition is called for changing state from 2 to 6
+	⧐ A condition is called for changing state from 2 to 6
 	M.delta( 6, 6, ')' ).pop("1n")
 
 	return M
