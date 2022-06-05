@@ -144,8 +144,17 @@ procedure initialize() begin
 	alphaLower := ('a'‥'z')
 	digits := ('0'‥'9')
 	alphaNum := alphaUpper ∪ alphaLower ∪ digits ∪ { '-' } // Alphanumeric characters
-	keyWords := { ":left" , ":north" , "move" , "move-dir" , "face" } // keywords
-	allSymbols := { "(" , ")" } // Symbols  and brackets, both single char and  multicharacter
+	keyWords := { 
+					":north", ":south", ":east", ":west",
+					":front", ":back", ":right", ":left",
+					":around", ":balloons", ":chips", "=", 
+					"defvar", "move", "turn", "face", "put",
+					"pick", "move-dir", "run-dirs", "move-face",
+					"skip", "if", "loop", "repeat", "defun",
+					"facing-p", "can-put-p", "can-pick-p",
+					"can-move-p", "not"
+				  }
+	allSymbols := { "(" , ")" } // Symbols and brackets, both single char and  multicharacter
 
 	// TRANSLATION FOR ALL STRINGS IN KEYWORDS
 	// Operators can be translated as themselves
@@ -160,7 +169,7 @@ procedure initialize() begin
 	translation.put(":left", 'L')
 	translation.put(":around", 'A')
 	
-	translation.put(":ballons", 'b')
+	translation.put(":balloons", 'b')
 	translation.put(":chips", 'c')
 
 	translation.put("defvar", 'D')
@@ -521,7 +530,7 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 2, 5, '(' ).push("1")
 	M.delta( 5, 2, 'n' ).push("n")
 	// A condition is called for changing state from 2 to 6
-	M.delta( 2, 6, ')' ).pop("1n")
+	M.delta( 6, 6, ')' ).pop("1n")
 
 	return M
 end
