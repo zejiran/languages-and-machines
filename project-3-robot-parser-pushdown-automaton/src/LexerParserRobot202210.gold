@@ -49,7 +49,7 @@ procedure main(args: String[]) begin
 	parser = createParser()
 
 	// testLexer(lexer)
-	GAutomataFrame.show(parser) 
+	// GAutomataFrame.show(parser) 
 	testLexerParser(lexer, parser)
 end
 
@@ -428,11 +428,13 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 4, 0, ')' ).pop("1mmm")
 	// (run-dirs Ds)
 	⧐ M.delta( 0, 1, '(' ).push("1")
-	M.delta( 1, 2, 'd' ).push("d")
+	M.delta( 1, 2, 'd' ).push("dd")
+	M.delta( 2, 2, '(' ).ignore()
 	M.delta( 2, 2, 'F' ).ignore()
 	M.delta( 2, 2, 'R' ).ignore()
 	M.delta( 2, 2, 'L' ).ignore()
 	M.delta( 2, 2, 'B' ).ignore()
+	M.delta( 2, 2, ')' ).pop("d")
 	M.delta( 2, 0, ')' ).pop("1d")
 	// (move-face n O)
 	⧐ M.delta( 0, 1, '(' ).push("1")
@@ -489,6 +491,10 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 2, ')' ).pop("1Ifc")
 	M.delta( 6, 5, '(' ).push("I1I")
 	M.delta( 6, 2, ')' ).pop("1In")
+	M.delta( 4, 2, ')' ).pop("1IIII")
+	M.delta( 2, 2, ')' ).pop("1Ill")
+	M.delta( 2, 2, ')' ).pop("1Irrr")
+	M.delta( 2, 2, ')' ).pop("1Iffff")
 	⧐ List Block2
 	M.delta( 2, 0, '(' ).push("II")
 	M.delta( 2, 4, ')' ).pop("I")
@@ -515,10 +521,14 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 4, ')' ).pop("1Ifc")
 	M.delta( 2, 5, '(' ).push("I1I")
 	M.delta( 6, 4, ')' ).pop("1In")
+	M.delta( 4, 4, ')' ).pop("1IIII")
+	M.delta( 2, 4, ')' ).pop("1Ill")
+	M.delta( 2, 4, ')' ).pop("1Irrr")
+	M.delta( 2, 4, ')' ).pop("1Iffff")
 	⧐ End of structure
 	M.delta( 4, 0, ')' ).pop("1III")
 	// (loop condition Block)
-	M.delta( 0, 1, '(' ).push("1")
+	⧐ M.delta( 0, 1, '(' ).push("1")
 	M.delta( 1, 2, 'l' ).push("l")
 	⧐ A condition is called for changing state from 2 to 6
 	⧐ List Block
@@ -547,10 +557,14 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 2, ')' ).pop("1lfc")
 	M.delta( 6, 5, '(' ).push("l1l")
 	M.delta( 6, 2, ')' ).pop("1ln")
+	M.delta( 4, 2, ')' ).pop("1lIII")
+	M.delta( 2, 2, ')' ).pop("1lll")
+	M.delta( 2, 2, ')' ).pop("1lrrr")
+	M.delta( 2, 2, ')' ).pop("1lffff")
 	⧐ End of structure
 	M.delta( 2, 0, ')' ).pop("1ll")
 	// (repeat n Block)
-	M.delta( 0, 1, '(' ).push("1")
+	⧐ M.delta( 0, 1, '(' ).push("1")
 	M.delta( 1, 2, 'r' ).push("r")
 	M.delta( 2, 6, '#' ).push("r")
 	M.delta( 2, 6, 'V' ).push("r")
@@ -581,6 +595,10 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 2, ')' ).pop("1rfc")
 	M.delta( 6, 5, '(' ).push("r1r")
 	M.delta( 6, 2, ')' ).pop("1rn")
+	M.delta( 4, 2, ')' ).pop("1rIII")
+	M.delta( 2, 2, ')' ).pop("1rll")
+	M.delta( 2, 2, ')' ).pop("1rrrr")
+	M.delta( 2, 2, ')' ).pop("1rffff")
 	⧐ End of structure
 	M.delta( 2, 0, ')' ).pop("1rrr")
 	// (defun name (Params)Block)
@@ -588,7 +606,7 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 1, 2, 'f' ).push("f")
 	M.delta( 2, 3, 'V' ).push("f")
 	M.delta( 2, 3, 'v' ).push("f")
-	M.delta( 3, 3, "(" ).push("ff")
+	M.delta( 3, 3, '(' ).push("ff")
 	M.delta( 3, 3, 'V' ).ignore()
 	M.delta( 3, 3, 'v' ).ignore()
 	M.delta( 3, 6, ')' ).pop("f")
@@ -618,6 +636,10 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 2, ')' ).pop("1ffc")
 	M.delta( 6, 5, '(' ).push("f1f")
 	M.delta( 6, 2, ')' ).pop("1fn")
+	M.delta( 4, 2, ')' ).pop("1fIII")
+	M.delta( 2, 2, ')' ).pop("1fll")
+	M.delta( 2, 2, ')' ).pop("1frrr")
+	M.delta( 2, 2, ')' ).pop("1fffff")
 	⧐ End of structure
 	M.delta( 2, 0, ')' ).pop("1ffff")
 	
@@ -664,6 +686,9 @@ function createParser(): IPushdownAutomaton begin
 	M.delta( 3, 3, 'v' ).ignore()
 	M.delta( 3, 3, '#' ).ignore()
 	M.delta( 3, 6, ')' ).pop("1fc")
+	⧐ Alternative
+	M.delta( 2, 6, 'V' ).ignore()
+	M.delta( 2, 6, 'v' ).ignore()
 	// (not cond)
 	M.delta( 2, 5, '(' ).push("1")
 	M.delta( 5, 2, 'n' ).push("n")
@@ -674,6 +699,18 @@ function createParser(): IPushdownAutomaton begin
 	// Allow to group commands
 	M.delta( 0, 0, '(' ).push("1")
 	M.delta( 0, 0, ')' ).pop("1")
+	M.delta( 1, 1, '(' ).push("1")
+	M.delta( 1, 1, ')' ).pop("1")
+	M.delta( 2, 2, '(' ).push("1")
+	M.delta( 2, 2, ')' ).pop("1")
+	M.delta( 3, 3, '(' ).push("1")
+	M.delta( 3, 3, ')' ).pop("1")
+	M.delta( 4, 4, '(' ).push("1")
+	M.delta( 4, 4, ')' ).pop("1")
+	M.delta( 5, 5, '(' ).push("1")
+	M.delta( 5, 5, ')' ).pop("1")
+	M.delta( 6, 6, '(' ).push("1")
+	M.delta( 6, 6, ')' ).pop("1")
 
 	return M
 end
@@ -703,7 +740,7 @@ procedure testLexerParser(M: ITransducer, P: IPushdownAutomaton) begin
 			result := M.acceptsString(input)
 			tokenStream := M.getOutputString()
 
-			print "The input was " + ( result ? "" : "not " ) + " accepted by the lexer."
+			print "The input was" + ( result ? "" : "not " ) + " accepted by the lexer."
 			if result then
 				print "Token Stream:  " + tokenStream
 				print "Strings: " + images 
