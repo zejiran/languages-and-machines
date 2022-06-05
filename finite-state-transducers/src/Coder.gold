@@ -1,0 +1,99 @@
+/**
+ * Exam
+ *
+ * Coder:
+ * Reads  strings of  (a‥z) and spaces
+ * outputs the same string shifting each letter (X + (V + (i%8)))%26 .  The first letter is shifted (V + (i%8))%26
+ * 
+ * Author: Juan Alegría - 202011282
+ */
+
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+using gold.structures.map.*
+
+
+procedure main ( args : String [ ] ) begin
+	m = createTransducer ( ) 
+	//vGAutomataFrame.show ( m ) 
+	test( m)
+end
+
+toSet(C) :=  {x|  x in C}
+procedure test(M:IAutomaton) begin
+	var sc:java.util.Scanner(System.$in)
+	isTransducer:=ITransducer.class.isInstance(M)
+	while true do
+		print "----------------------------"
+		print "Input String  empty string to exit): "
+		
+		string:=sc.nextLine()
+		if string = "" then break end
+		
+		inputM = toSet(M.getAlphabet())
+		
+		if M.getAlphabet().containsAll(string) then
+			result:=M.acceptsString(string)
+			print "The string was "+(result?"accepted!":"rejected.")+(isTransducer?". Output:":"")
+			if isTransducer then
+				print (M as ITransducer).getOutputString()
+			end
+		else 
+			print  "Input contains invalid symbols: "+ toSet(string) \ inputM
+		end
+end
+	print "Execution terminated"
+end
+
+
+function createTransducer ( ) : ITransducer begin
+	Q := (0‥7)×(0‥1)
+
+	Σ := ( 'a' ‥ 'z' ) ∪ {' '}
+	Out := ( 'a' ‥ 'z' ) ∪ {' '}
+
+	q₀ := ⟨1, 0⟩
+	F := Q
+	return GDeterministicTransducer ( Q , Σ , Out , q₀ , F , δ , g , h )
+end
+
+function δ(⟨f, r⟩, s) begin
+	if s == ' ' then return ⟨(f+1)%8, 0⟩ 
+	elseif r == 0 then return ⟨f, 1⟩
+	end
+	return ⟨f, r⟩
+end	
+
+function h(⟨f, r⟩, s) begin
+	if s == ' ' then return ' '
+	elseif r == 0 then return shiftFirstSymbol(s, f)
+	end
+	return shiftOtherSymbols(s, f)
+end	
+
+
+function g ( q ) begin
+	return λ
+end
+
+function shiftFirstSymbol(symbol, shift) begin
+	var  r : Character
+  
+  	if symbol in ('a'‥'z') then
+		r:= 'a' + (symbol - 'a'+ shift) % 26
+	else 
+		r:= symbol
+	end		
+	return r
+end
+
+function shiftOtherSymbols(symbol, shift) begin
+	var  r : Character
+  
+  	if symbol in ('a'‥'z') then
+		r:= 'a' + (symbol-2 + symbol + shift - 'a' - 'a') % 26
+	else 
+		r:= symbol
+	end		
+	return r
+end
